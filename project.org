@@ -1,0 +1,1326 @@
+#+title: Project
+
+# Aspect-based sentiment analysis with LDA and Naive Bayes
+
+
+
+* **PHASE 1: Environment Setup & Data Loading**
+
+** **Step 1.1: Install Required Libraries**
+
+#+begin_src bash :results output raw :wrap src :exports both
+
+
+# Create virtual environment (recommended)
+python -m venv absa_env
+source absa_env/bin/activate  # On Windows: absa_env\Scripts\activate
+
+# Install all required packages
+pip install pandas numpy scikit-learn gensim nltk matplotlib seaborn
+pip install pyLDAvis wordcloud openpyxl joblib scipy
+#+end_src
+
+** **Step 1.2: Download NLTK Data**
+
+#+begin_src python :results output raw :wrap src :exports both :tangle download_nltk_data.py
+import nltk
+
+nltk.download('stopwords')
+nltk.download('punkt')
+nltk.download('punkt_tab')
+nltk.download('wordnet')
+nltk.download('averaged_perceptron_tagger')
+nltk.download('omw-1.4')
+
+print("NLTK data downloaded successfully!")
+#+end_src
+
+#+RESULTS:
+#+begin_src
+#+end_src
+
+* **PHASE 2: Load & Explore Data**
+
+** **Step 2.1: Load the JSONL.GZ File**
+
+#+begin_src python :results output raw :wrap src :exports both :tangle 01_load_data.py
+import json
+import gzip
+import pandas as pd
+from datetime import datetime
+
+def load_amazon_reviews(file_path, max_rows=None):
+    """
+    Load Amazon reviews from .jsonl.gz file
+    """
+    reviews = []
+    
+    with gzip.open(file_path, 'rt', encoding='utf-8') as f:
+        for i, line in enumerate(f):
+            if max_rows and i >= max_rows:
+                break
+            
+            try:
+                review = json.loads(line.strip())
+                reviews.append(review)
+            except json.JSONDecodeError:
+                print(f"Error parsing line {i}")
+                continue
+            
+            if (i + 1) % 100000 == 0:
+                print(f"Loaded {i + 1} reviews...")
+    
+    return pd.DataFrame(reviews)
+
+# Load the data
+print("Loading All_Beauty reviews...")
+df = load_amazon_reviews('All_Beauty.jsonl.gz')
+
+# Save as CSV for easier access later
+df.to_csv('all_beauty_reviews.csv', index=False)
+
+print(f"\n✓ Loaded {len(df)} reviews")
+print(f"✓ Saved to all_beauty_reviews.csv")
+print(f"\nDataset shape: {df.shape}")
+print(f"\nColumns: {df.columns.tolist()}")
+#+end_src
+
+** **Step 2.2: Initial Data Exploration**
+
+#+begin_src python :results output raw :wrap src :exports both :tangle 02_explore_data.py
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from datetime import datetime
+
+# Load data
+df = pd.read_csv('all_beauty_reviews.csv')
+
+print("="*70)
+print("DATASET OVERVIEW")
+print("="*70)
+
+# Basic stats
+print(f"\nTotal reviews: {len(df):,}")
+print(f"Date range: {pd.to_datetime(df['timestamp'], unit='ms').min()} to {pd.to_datetime(df['timestamp'], unit='ms').max()}")
+print(f"Unique users: {df['user_id'].nunique():,}")
+print(f"Unique products: {df['parent_asin'].nunique():,}")
+print(f"Verified purchases: {df['verified_purchase'].sum():,} ({df['verified_purchase'].mean()*100:.1f}%)")
+
+# Rating distribution
+print("\n" + "="*70)
+print("RATING DISTRIBUTION")
+print("="*70)
+print(df['rating'].value_counts().sort_index())
+print("\nPercentages:")
+print(df['rating'].value_counts(normalize=True).sort_index() * 100)
+
+# Text length analysis
+df['text_length'] = df['text'].fillna('').str.len()
+df['word_count'] = df['text'].fillna('').str.split().str.len()
+
+print("\n" + "="*70)
+print("TEXT STATISTICS")
+print("="*70)
+print(f"Average text length: {df['text_length'].mean():.0f} characters")
+print(f"Average word count: {df['word_count'].mean():.0f} words")
+print(f"Median word count: {df['word_count'].median():.0f} words")
+
+# Missing values
+print("\n" + "="*70)
+print("MISSING VALUES")
+print("="*70)
+print(df.isnull().sum())
+
+# Visualizations
+fig, axes = plt.subplots(2, 2, figsize=(14, 10))
+
+# Rating distribution
+df['rating'].value_counts().sort_index().plot(kind='bar', ax=axes[0, 0], color='steelblue')
+axes[0, 0].set_title('Rating Distribution', fontsize=14, fontweight='bold')
+axes[0, 0].set_xlabel('Rating')
+axes[0, 0].set_ylabel('Count')
+axes[0, 0].grid(axis='y', alpha=0.3)
+
+# Word count distribution
+axes[0, 1].hist(df['word_count'], bins=50, color='coral', edgecolor='black')
+axes[0, 1].set_title('Word Count Distribution', fontsize=14, fontweight='bold')
+axes[0, 1].set_xlabel('Number of Words')
+axes[0, 1].set_ylabel('Frequency')
+axes[0, 1].set_xlim(0, 500)
+axes[0, 1].grid(axis='y', alpha=0.3)
+
+# Reviews over time
+df['date'] = pd.to_datetime(df['timestamp'], unit='ms')
+df['year_month'] = df['date'].dt.to_period('M')
+reviews_over_time = df['year_month'].value_counts().sort_index()
+reviews_over_time.plot(ax=axes[1, 0], color='green')
+axes[1, 0].set_title('Reviews Over Time', fontsize=14, fontweight='bold')
+axes[1, 0].set_xlabel('Date')
+axes[1, 0].set_ylabel('Number of Reviews')
+axes[1, 0].grid(alpha=0.3)
+
+# Verified vs Unverified
+verified_counts = df['verified_purchase'].value_counts()
+axes[1, 1].pie(verified_counts, labels=['Verified', 'Unverified'], 
+               autopct='%1.1f%%', colors=['lightgreen', 'lightcoral'])
+axes[1, 1].set_title('Verified vs Unverified Purchases', fontsize=14, fontweight='bold')
+
+plt.tight_layout()
+plt.savefig('data_exploration.png', dpi=300, bbox_inches='tight')
+print("\n✓ Visualizations saved to data_exploration.png")
+
+# Sample reviews
+print("\n" + "="*70)
+print("SAMPLE REVIEWS")
+print("="*70)
+for i in range(3):
+    print(f"\nReview {i+1}:")
+    print(f"Rating: {df.iloc[i]['rating']}/5")
+    print(f"Title: {df.iloc[i]['title']}")
+    print(f"Text: {df.iloc[i]['text'][:200]}...")
+#+end_src
+
+
+* **PHASE 3: Data Preprocessing**
+
+** **Step 3.1: Text Cleaning & Preprocessing**
+
+#+begin_src python :results output raw :wrap src :exports both :tangle 03_preprocess_data.py
+import pandas as pd
+import re
+import nltk
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+from nltk.stem import WordNetLemmatizer
+
+def clean_text(text):
+    """Clean review text"""
+    if pd.isna(text) or text == '':
+        return ""
+    
+    # Convert to lowercase
+    text = str(text).lower()
+    
+    # Remove HTML tags
+    text = re.sub(r'<.*?>', '', text)
+    
+    # Remove URLs
+    text = re.sub(r'http\S+|www.\S+', '', text)
+    
+    # Remove email addresses
+    text = re.sub(r'\S+@\S+', '', text)
+    
+    # Keep only letters and spaces
+    text = re.sub(r'[^a-zA-Z\s]', ' ', text)
+    
+    # Remove extra whitespace
+    text = re.sub(r'\s+', ' ', text).strip()
+    
+    return text
+
+def preprocess_text(text):
+    """Tokenize, remove stopwords, lemmatize"""
+    # Clean first
+    text = clean_text(text)
+    
+    if not text:
+        return []
+    
+    # Tokenize
+    tokens = word_tokenize(text)
+    
+    # Remove stopwords (but keep negations for sentiment)
+    stop_words = set(stopwords.words('english'))
+    keep_words = {'not', 'no', 'never', 'neither', 'nobody', 'nothing', 
+                  'nowhere', 'hardly', 'barely', 'scarcely', "don't", "doesn't",
+                  "didn't", "won't", "wouldn't", "shouldn't", "couldn't", "can't"}
+    stop_words = stop_words - keep_words
+    
+    # Remove short words and stopwords
+    tokens = [w for w in tokens if len(w) > 2 and w not in stop_words]
+    
+    # Lemmatize
+    lemmatizer = WordNetLemmatizer()
+    tokens = [lemmatizer.lemmatize(w) for w in tokens]
+    
+    return tokens
+
+# Load data
+print("Loading data...")
+df = pd.read_csv('all_beauty_reviews.csv')
+
+print(f"Original dataset: {len(df)} reviews")
+
+# Filter out reviews with no text
+df = df[df['text'].notna()].copy()
+print(f"After removing null text: {len(df)} reviews")
+
+# Apply preprocessing
+print("\nCleaning text...")
+df['cleaned_text'] = df['text'].apply(clean_text)
+
+print("Tokenizing and lemmatizing...")
+df['tokens'] = df['cleaned_text'].apply(preprocess_text)
+df['processed_text'] = df['tokens'].apply(lambda x: ' '.join(x))
+
+# Filter out very short reviews (less than 5 words)
+df['token_count'] = df['tokens'].apply(len)
+df = df[df['token_count'] >= 5].copy()
+
+print(f"After filtering short reviews: {len(df)} reviews")
+
+# Create sentiment labels
+def create_sentiment_label(rating):
+    if rating <= 2:
+        return 'negative'
+    elif rating == 3:
+        return 'neutral'
+    else:
+        return 'positive'
+
+df['sentiment'] = df['rating'].apply(create_sentiment_label)
+
+# Save preprocessed data
+df.to_csv('all_beauty_preprocessed.csv', index=False)
+
+print("\n" + "="*70)
+print("PREPROCESSING COMPLETE")
+print("="*70)
+print(f"Final dataset: {len(df)} reviews")
+print("\nSentiment distribution:")
+print(df['sentiment'].value_counts())
+print("\nPercentages:")
+print(df['sentiment'].value_counts(normalize=True) * 100)
+
+# Show examples
+print("\n" + "="*70)
+print("PREPROCESSING EXAMPLES")
+print("="*70)
+for i in range(2):
+    print(f"\nExample {i+1}:")
+    print(f"Original: {df.iloc[i]['text'][:150]}...")
+    print(f"Cleaned: {df.iloc[i]['cleaned_text'][:150]}...")
+    print(f"Tokens: {df.iloc[i]['tokens'][:20]}")
+
+print("\n✓ Preprocessed data saved to all_beauty_preprocessed.csv")
+#+end_src
+
+* **PHASE 4: LDA Topic Modeling**
+
+** **Step 4.1: Find Optimal Number of Topics**
+
+#+begin_src python :results output raw :wrap src :exports both :tangle 04_lda_topic_modeling.py
+import pandas as pd
+import numpy as np
+from gensim import corpora
+from gensim.models import LdaModel, CoherenceModel
+import matplotlib.pyplot as plt
+import pickle
+
+# Load preprocessed data
+print("Loading preprocessed data...")
+df = pd.read_csv('all_beauty_preprocessed.csv')
+df['tokens'] = df['tokens'].apply(eval)  # Convert string back to list
+
+print(f"Dataset size: {len(df)} reviews")
+
+# Sample if dataset is too large (optional, for faster training)
+# For 700K reviews, you might want to sample for coherence testing
+SAMPLE_SIZE = 100000  # Use 100K for coherence testing
+if len(df) > SAMPLE_SIZE:
+    print(f"\nSampling {SAMPLE_SIZE} reviews for coherence testing...")
+    df_sample = df.sample(n=SAMPLE_SIZE, random_state=42)
+else:
+    df_sample = df.copy()
+
+# Create dictionary and corpus
+print("\nCreating dictionary and corpus...")
+dictionary = corpora.Dictionary(df_sample['tokens'])
+
+print(f"Dictionary size before filtering: {len(dictionary)}")
+
+# Filter extremes
+dictionary.filter_extremes(
+    no_below=10,      # Word must appear in at least 10 documents
+    no_above=0.5,     # Word must appear in no more than 50% of documents
+    keep_n=5000       # Keep only top 5000 most frequent words
+)
+
+print(f"Dictionary size after filtering: {len(dictionary)}")
+
+# Create corpus
+corpus = [dictionary.doc2bow(tokens) for tokens in df_sample['tokens']]
+
+# Save dictionary and corpus
+dictionary.save('beauty_dictionary.dict')
+with open('beauty_corpus.pkl', 'wb') as f:
+    pickle.dump(corpus, f)
+
+print("\n" + "="*70)
+print("FINDING OPTIMAL NUMBER OF TOPICS")
+print("="*70)
+
+def compute_coherence_values(dictionary, corpus, texts, limit=20, start=5, step=1):
+    """
+    Compute coherence scores for different numbers of topics
+    """
+    coherence_values = []
+    model_list = []
+    
+    for num_topics in range(start, limit, step):
+        print(f"\nTraining LDA with {num_topics} topics...")
+        
+        model = LdaModel(
+            corpus=corpus,
+            id2word=dictionary,
+            num_topics=num_topics,
+            random_state=42,
+            chunksize=2000,
+            passes=10,
+            alpha='auto',
+            eta='auto',
+            per_word_topics=True,
+            eval_every=None
+        )
+        
+        model_list.append(model)
+        
+        # Calculate coherence
+        coherencemodel = CoherenceModel(
+            model=model,
+            texts=texts,
+            dictionary=dictionary,
+            coherence='c_v'
+        )
+        coherence = coherencemodel.get_coherence()
+        coherence_values.append(coherence)
+        
+        print(f"  Coherence score: {coherence:.4f}")
+    
+    return model_list, coherence_values
+
+# Compute coherence scores
+model_list, coherence_values = compute_coherence_values(
+    dictionary=dictionary,
+    corpus=corpus,
+    texts=df_sample['tokens'].tolist(),
+    start=5,
+    limit=16,
+    step=1
+)
+
+# Plot results
+x = range(5, 16, 1)
+plt.figure(figsize=(12, 6))
+plt.plot(x, coherence_values, marker='o', linewidth=2, markersize=8)
+plt.xlabel("Number of Topics", fontsize=12)
+plt.ylabel("Coherence Score", fontsize=12)
+plt.title("Topic Coherence Scores", fontsize=14, fontweight='bold')
+plt.xticks(x)
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.savefig('topic_coherence_scores.png', dpi=300, bbox_inches='tight')
+
+# Find optimal
+optimal_idx = coherence_values.index(max(coherence_values))
+optimal_topics = list(x)[optimal_idx]
+
+print("\n" + "="*70)
+print(f"OPTIMAL NUMBER OF TOPICS: {optimal_topics}")
+print(f"COHERENCE SCORE: {coherence_values[optimal_idx]:.4f}")
+print("="*70)
+
+# Save results
+results = {
+    'num_topics': list(x),
+    'coherence_scores': coherence_values,
+    'optimal_topics': optimal_topics
+}
+
+with open('coherence_results.pkl', 'wb') as f:
+    pickle.dump(results, f)
+
+print("\n✓ Results saved to coherence_results.pkl")
+print("✓ Plot saved to topic_coherence_scores.png")
+#+end_src
+
+** **Step 4.2: Train Final LDA Model**
+
+#+begin_src python :results output raw :wrap src :exports both :tangle 05_train_final_lda.py
+import pandas as pd
+import pickle
+from gensim import corpora
+from gensim.models import LdaModel
+import pyLDAvis
+import pyLDAvis.gensim_models as gensimvis
+
+# Load data
+print("Loading data...")
+df = pd.read_csv('all_beauty_preprocessed.csv')
+df['tokens'] = df['tokens'].apply(eval)
+
+# Load dictionary
+dictionary = corpora.Dictionary.load('beauty_dictionary.dict')
+
+# Create corpus for full dataset
+print("\nCreating corpus for full dataset...")
+corpus = [dictionary.doc2bow(tokens) for tokens in df['tokens']]
+
+# Load optimal number of topics
+with open('coherence_results.pkl', 'rb') as f:
+    results = pickle.load(f)
+    num_topics = results['optimal_topics']
+
+print(f"\nTraining final LDA model with {num_topics} topics...")
+
+# Train final model
+lda_model = LdaModel(
+    corpus=corpus,
+    id2word=dictionary,
+    num_topics=num_topics,
+    random_state=42,
+    chunksize=2000,
+    passes=15,          # More passes for final model
+    iterations=400,
+    alpha='auto',
+    eta='auto',
+    per_word_topics=True,
+    eval_every=10
+)
+
+# Save model
+lda_model.save('beauty_lda_final.model')
+
+print("\n" + "="*70)
+print("DISCOVERED TOPICS")
+print("="*70)
+
+# Print topics
+for idx, topic in lda_model.print_topics(num_topics, num_words=15):
+    print(f"\nTopic {idx}:")
+    print(f"  {topic}")
+
+# Manually label topics based on keywords (you'll need to do this)
+# These are EXAMPLE labels - you must create your own based on the actual topics
+topic_labels = {
+    0: "Hair Care & Styling",
+    1: "Skin Care & Moisturizers",
+    2: "Makeup & Cosmetics",
+    3: "Nail Care & Polish",
+    4: "Scent & Fragrance",
+    5: "Product Quality & Packaging",
+    6: "Price & Value",
+    7: "Shipping & Delivery",
+    # Add more based on your num_topics
+}
+
+# Save topic labels
+with open('topic_labels.pkl', 'wb') as f:
+    pickle.dump(topic_labels, f)
+
+# Create visualization
+print("\nCreating interactive visualization...")
+vis = gensimvis.prepare(lda_model, corpus, dictionary, mds='mmds')
+pyLDAvis.save_html(vis, 'lda_visualization.html')
+
+print("\n✓ Model saved to beauty_lda_final.model")
+print("✓ Topic labels saved to topic_labels.pkl")
+print("✓ Visualization saved to lda_visualization.html")
+print("\n>>> Open lda_visualization.html in your browser to explore topics!")
+#+end_src
+
+** **Step 4.3: Assign Topics to Reviews**
+
+#+begin_src python :results output raw :wrap src :exports both :tangle 06_assign_topics.py
+import pandas as pd
+import pickle
+from gensim import corpora
+from gensim.models import LdaModel
+
+# Load data and models
+print("Loading data and models...")
+df = pd.read_csv('all_beauty_preprocessed.csv')
+df['tokens'] = df['tokens'].apply(eval)
+
+dictionary = corpora.Dictionary.load('beauty_dictionary.dict')
+lda_model = LdaModel.load('beauty_lda_final.model')
+
+with open('topic_labels.pkl', 'rb') as f:
+    topic_labels = pickle.load(f)
+
+# Create corpus
+corpus = [dictionary.doc2bow(tokens) for tokens in df['tokens']]
+
+print("\nAssigning topics to reviews...")
+
+def get_document_topics(lda_model, corpus):
+    """Extract topic probabilities for each document"""
+    all_topics = []
+    
+    for i, doc_topics in enumerate(lda_model[corpus]):
+        if (i + 1) % 50000 == 0:
+            print(f"  Processed {i + 1} reviews...")
+        
+        # Get topic probabilities
+        topic_probs = dict(doc_topics[0])
+        
+        # Find dominant topic
+        if topic_probs:
+            dominant_topic = max(topic_probs.items(), key=lambda x: x[1])
+            
+            # Create dictionary with all topic probabilities
+            topic_dict = {
+                'dominant_topic': dominant_topic[0],
+                'dominant_prob': dominant_topic[1]
+            }
+            
+            # Add individual topic probabilities
+            for topic_id in range(lda_model.num_topics):
+                topic_dict[f'topic_{topic_id}_prob'] = topic_probs.get(topic_id, 0.0)
+            
+            all_topics.append(topic_dict)
+        else:
+            # Handle edge case
+            all_topics.append({
+                'dominant_topic': -1,
+                'dominant_prob': 0.0
+            })
+    
+    return pd.DataFrame(all_topics)
+
+# Get topic assignments
+topics_df = get_document_topics(lda_model, corpus)
+
+# Merge with original data
+df = pd.concat([df.reset_index(drop=True), topics_df], axis=1)
+
+# Map topic labels
+df['topic_label'] = df['dominant_topic'].map(topic_labels)
+df.loc[df['dominant_topic'] == -1, 'topic_label'] = 'Unknown'
+
+# Save
+df.to_csv('all_beauty_with_topics.csv', index=False)
+
+print("\n" + "="*70)
+print("TOPIC ASSIGNMENT COMPLETE")
+print("="*70)
+print(f"\nTopic distribution:")
+print(df['topic_label'].value_counts())
+
+print("\n✓ Data with topics saved to all_beauty_with_topics.csv")
+#+end_src
+
+* **PHASE 5: Naive Bayes Classification**
+
+#+begin_src python :results output raw :wrap src :exports both :tangle 07_naive_bayes_classification.py
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.naive_bayes import MultinomialNB, ComplementNB
+from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
+import matplotlib.pyplot as plt
+import seaborn as sns
+import joblib
+from scipy.sparse import hstack
+
+# Load data with topics
+print("Loading data with topics...")
+df = pd.read_csv('all_beauty_with_topics.csv')
+
+print(f"Dataset size: {len(df)}")
+print(f"\nSentiment distribution:")
+print(df['sentiment'].value_counts())
+
+# Prepare features
+print("\nCreating TF-IDF features...")
+tfidf_vectorizer = TfidfVectorizer(
+    max_features=5000,
+    min_df=5,
+    max_df=0.7,
+    ngram_range=(1, 2),  # Unigrams and bigrams
+    sublinear_tf=True
+)
+
+X_tfidf = tfidf_vectorizer.fit_transform(df['processed_text'])
+
+# Get topic probability features
+topic_prob_cols = [col for col in df.columns if col.startswith('topic_') and col.endswith('_prob')]
+X_topics = df[topic_prob_cols].fillna(0).values
+
+# Combine features
+print("Combining TF-IDF and topic features...")
+X_combined = hstack([X_tfidf, X_topics])
+
+print(f"Feature shape: {X_combined.shape}")
+
+# Target variable
+y = df['sentiment']
+
+# Train-test split
+print("\nSplitting data...")
+X_train, X_test, y_train, y_test, idx_train, idx_test = train_test_split(
+    X_combined, y, df.index,
+    test_size=0.2,
+    random_state=42,
+    stratify=y
+)
+
+print(f"Training set: {X_train.shape[0]} samples")
+print(f"Test set: {X_test.shape[0]} samples")
+
+# Train models
+print("\n" + "="*70)
+print("TRAINING NAIVE BAYES MODELS")
+print("="*70)
+
+# 1. Multinomial Naive Bayes
+print("\n1. Training Multinomial Naive Bayes...")
+mnb = MultinomialNB(alpha=0.1)
+mnb.fit(X_train, y_train)
+y_pred_mnb = mnb.predict(X_test)
+acc_mnb = accuracy_score(y_test, y_pred_mnb)
+print(f"   Accuracy: {acc_mnb:.4f}")
+
+# 2. Complement Naive Bayes
+print("\n2. Training Complement Naive Bayes...")
+cnb = ComplementNB(alpha=0.1)
+cnb.fit(X_train, y_train)
+y_pred_cnb = cnb.predict(X_test)
+acc_cnb = accuracy_score(y_test, y_pred_cnb)
+print(f"   Accuracy: {acc_cnb:.4f}")
+
+# Choose best model
+if acc_cnb > acc_mnb:
+    best_model = cnb
+    y_pred = y_pred_cnb
+    model_name = "Complement Naive Bayes"
+    print(f"\n>>> Using Complement Naive Bayes (better performance)")
+else:
+    best_model = mnb
+    y_pred = y_pred_mnb
+    model_name = "Multinomial Naive Bayes"
+    print(f"\n>>> Using Multinomial Naive Bayes (better performance)")
+
+# Hyperparameter tuning
+print("\n" + "="*70)
+print("HYPERPARAMETER TUNING")
+print("="*70)
+
+param_grid = {'alpha': [0.001, 0.01, 0.1, 0.5, 1.0, 2.0]}
+
+print("\nPerforming grid search...")
+grid_search = GridSearchCV(
+    ComplementNB(),
+    param_grid,
+    cv=5,
+    scoring='f1_weighted',
+    n_jobs=-1,
+    verbose=1
+)
+
+grid_search.fit(X_train, y_train)
+
+print(f"\nBest parameters: {grid_search.best_params_}")
+print(f"Best CV score: {grid_search.best_score_:.4f}")
+
+# Use tuned model
+tuned_model = grid_search.best_estimator_
+y_pred_tuned = tuned_model.predict(X_test)
+
+# Evaluation
+print("\n" + "="*70)
+print(f"EVALUATION: {model_name} (Tuned)")
+print("="*70)
+
+print("\nClassification Report:")
+print(classification_report(y_test, y_pred_tuned, digits=4))
+
+# Confusion Matrix
+cm = confusion_matrix(y_test, y_pred_tuned, labels=['negative', 'neutral', 'positive'])
+
+plt.figure(figsize=(10, 8))
+sns.heatmap(cm, annot=True, fmt='d', cmap='Blues',
+            xticklabels=['Negative', 'Neutral', 'Positive'],
+            yticklabels=['Negative', 'Neutral', 'Positive'],
+            cbar_kws={'label': 'Count'})
+plt.title(f'{model_name} - Confusion Matrix', fontsize=14, fontweight='bold')
+plt.ylabel('True Label', fontsize=12)
+plt.xlabel('Predicted Label', fontsize=12)
+plt.tight_layout()
+plt.savefig('confusion_matrix.png', dpi=300, bbox_inches='tight')
+
+print("\n✓ Confusion matrix saved to confusion_matrix.png")
+
+# Save models
+joblib.dump(tuned_model, 'naive_bayes_model.pkl')
+joblib.dump(tfidf_vectorizer, 'tfidf_vectorizer.pkl')
+
+print("\n✓ Models saved:")
+print("  - naive_bayes_model.pkl")
+print("  - tfidf_vectorizer.pkl")
+
+# Save predictions
+df_test = df.loc[idx_test].copy()
+df_test['predicted_sentiment'] = y_pred_tuned
+df_test.to_csv('all_beauty_predictions.csv', index=False)
+
+print("✓ Predictions saved to all_beauty_predictions.csv")
+#+end_src
+
+
+* **PHASE 6: Aspect-Based Sentiment Analysis**
+
+#+begin_src python :results output raw :wrap src :exports both :tangle 08_aspect_sentiment_analysis.py
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
+from wordcloud import WordCloud
+
+# Load predictions
+print("Loading predictions...")
+df = pd.read_csv('all_beauty_predictions.csv')
+
+print(f"Total reviews: {len(df)}")
+
+# Remove unknown topics
+df = df[df['topic_label'] != 'Unknown'].copy()
+
+print("\n" + "="*70)
+print("ASPECT-BASED SENTIMENT ANALYSIS")
+print("="*70)
+
+# 1. Overall sentiment by aspect
+aspect_sentiment = pd.crosstab(
+    df['topic_label'],
+    df['predicted_sentiment'],
+    normalize='index'
+) * 100
+
+print("\nSentiment Distribution by Aspect (%):")
+print(aspect_sentiment.round(2))
+
+# Visualization 1: Stacked bar chart
+fig, axes = plt.subplots(2, 1, figsize=(14, 12))
+
+# Absolute counts
+aspect_sentiment_counts = pd.crosstab(
+    df['topic_label'],
+    df['predicted_sentiment']
+)
+
+aspect_sentiment_counts.plot(kind='bar', stacked=False, ax=axes[0], 
+                             color=['#d62728', '#ff7f0e', '#2ca02c'])
+axes[0].set_title('Sentiment Distribution by Aspect (Counts)', fontsize=14, fontweight='bold')
+axes[0].set_xlabel('Product Aspect', fontsize=12)
+axes[0].set_ylabel('Number of Reviews', fontsize=12)
+axes[0].legend(title='Sentiment', labels=['Negative', 'Neutral', 'Positive'])
+axes[0].tick_params(axis='x', rotation=45)
+axes[0].grid(axis='y', alpha=0.3)
+
+# Percentages
+aspect_sentiment.plot(kind='bar', stacked=False, ax=axes[1],
+                      color=['#d62728', '#ff7f0e', '#2ca02c'])
+axes[1].set_title('Sentiment Distribution by Aspect (%)', fontsize=14, fontweight='bold')
+axes[1].set_xlabel('Product Aspect', fontsize=12)
+axes[1].set_ylabel('Percentage', fontsize=12)
+axes[1].legend(title='Sentiment', labels
+
+
+
+## Prompt:
+11/4/2025, 9:18:11 PM
+
+Continue
+
+
+
+## Response:
+11/4/2025, 9:19:58 PM
+
+```python
+axes[1].legend(title='Sentiment', labels=['Negative', 'Neutral', 'Positive'])
+axes[1].tick_params(axis='x', rotation=45)
+axes[1].grid(axis='y', alpha=0.3)
+
+plt.tight_layout()
+plt.savefig('aspect_sentiment_distribution.png', dpi=300, bbox_inches='tight')
+print("\n✓ Saved: aspect_sentiment_distribution.png")
+
+# Visualization 2: Heatmap
+plt.figure(figsize=(10, 8))
+sns.heatmap(aspect_sentiment_counts, annot=True, fmt='d', cmap='RdYlGn',
+            cbar_kws={'label': 'Number of Reviews'})
+plt.title('Aspect-Based Sentiment Analysis Heatmap', fontsize=14, fontweight='bold')
+plt.xlabel('Sentiment', fontsize=12)
+plt.ylabel('Product Aspect', fontsize=12)
+plt.tight_layout()
+plt.savefig('absa_heatmap.png', dpi=300, bbox_inches='tight')
+print("✓ Saved: absa_heatmap.png")
+
+# 2. Identify problematic aspects
+print("\n" + "="*70)
+print("ASPECT ANALYSIS - STRENGTHS & WEAKNESSES")
+print("="*70)
+
+aspect_summary = pd.DataFrame({
+    'Total_Reviews': df.groupby('topic_label').size(),
+    'Positive_%': aspect_sentiment['positive'],
+    'Neutral_%': aspect_sentiment['neutral'],
+    'Negative_%': aspect_sentiment['negative'],
+    'Net_Sentiment': aspect_sentiment['positive'] - aspect_sentiment['negative']
+})
+
+aspect_summary = aspect_summary.sort_values('Net_Sentiment', ascending=False)
+
+print("\nAspect Summary (sorted by Net Sentiment):")
+print(aspect_summary.round(2))
+
+print("\n🟢 STRONGEST ASPECTS:")
+for aspect in aspect_summary.head(3).index:
+    pos_pct = aspect_summary.loc[aspect, 'Positive_%']
+    neg_pct = aspect_summary.loc[aspect, 'Negative_%']
+    print(f"  • {aspect}: {pos_pct:.1f}% positive, {neg_pct:.1f}% negative")
+
+print("\n🔴 WEAKEST ASPECTS:")
+for aspect in aspect_summary.tail(3).index:
+    pos_pct = aspect_summary.loc[aspect, 'Positive_%']
+    neg_pct = aspect_summary.loc[aspect, 'Negative_%']
+    print(f"  • {aspect}: {pos_pct:.1f}% positive, {neg_pct:.1f}% negative")
+
+# 3. Deep dive into each aspect
+print("\n" + "="*70)
+print("DETAILED ASPECT ANALYSIS")
+print("="*70)
+
+def analyze_aspect(df, aspect_name, n_examples=3):
+    """Detailed analysis of a specific aspect"""
+    print(f"\n{'='*70}")
+    print(f"ASPECT: {aspect_name}")
+    print(f"{'='*70}")
+    
+    aspect_df = df[df['topic_label'] == aspect_name].copy()
+    
+    print(f"\nTotal reviews: {len(aspect_df):,}")
+    
+    # Sentiment breakdown
+    sentiment_counts = aspect_df['predicted_sentiment'].value_counts()
+    print("\nSentiment Distribution:")
+    for sentiment in ['positive', 'neutral', 'negative']:
+        if sentiment in sentiment_counts.index:
+            count = sentiment_counts[sentiment]
+            pct = (count / len(aspect_df)) * 100
+            print(f"  {sentiment.capitalize():<10}: {count:>6,} ({pct:>5.1f}%)")
+    
+    # Average rating
+    avg_rating = aspect_df['rating'].mean()
+    print(f"\nAverage Rating: {avg_rating:.2f}/5.0")
+    
+    # Show examples for each sentiment
+    for sentiment in ['positive', 'negative', 'neutral']:
+        examples = aspect_df[aspect_df['predicted_sentiment'] == sentiment].head(n_examples)
+        
+        if len(examples) > 0:
+            print(f"\n{sentiment.upper()} EXAMPLES:")
+            for idx, (_, row) in enumerate(examples.iterrows(), 1):
+                print(f"\n  [{idx}] Rating: {row['rating']:.0f}/5 | Confidence: {row['dominant_prob']:.2f}")
+                text = row['text'] if len(row['text']) <= 200 else row['text'][:200] + "..."
+                print(f"      \"{text}\"")
+    
+    return aspect_df
+
+# Analyze all aspects
+aspect_analyses = {}
+for aspect in aspect_summary.index:
+    aspect_analyses[aspect] = analyze_aspect(df, aspect, n_examples=2)
+
+# 4. Word clouds by aspect and sentiment
+print("\n" + "="*70)
+print("GENERATING WORD CLOUDS")
+print("="*70)
+
+def generate_aspect_wordclouds(df, aspect_name):
+    """Generate word clouds for each sentiment within an aspect"""
+    aspect_df = df[df['topic_label'] == aspect_name]
+    
+    fig, axes = plt.subplots(1, 3, figsize=(18, 6))
+    sentiments = ['positive', 'neutral', 'negative']
+    colors = ['Greens', 'Blues', 'Reds']
+    
+    for ax, sentiment, colormap in zip(axes, sentiments, colors):
+        text_data = aspect_df[aspect_df['predicted_sentiment'] == sentiment]['processed_text']
+        
+        if len(text_data) > 0:
+            text = ' '.join(text_data.values)
+            
+            wordcloud = WordCloud(
+                width=600, height=400,
+                background_color='white',
+                colormap=colormap,
+                max_words=50,
+                relative_scaling=0.5
+            ).generate(text)
+            
+            ax.imshow(wordcloud, interpolation='bilinear')
+            ax.set_title(f'{sentiment.capitalize()} ({len(text_data)} reviews)', 
+                        fontsize=12, fontweight='bold')
+        else:
+            ax.text(0.5, 0.5, 'No reviews', ha='center', va='center')
+            ax.set_title(f'{sentiment.capitalize()} (0 reviews)', 
+                        fontsize=12, fontweight='bold')
+        
+        ax.axis('off')
+    
+    fig.suptitle(f'Word Clouds: {aspect_name}', fontsize=14, fontweight='bold')
+    plt.tight_layout()
+    filename = f'wordcloud_{aspect_name.replace(" ", "_").replace("&", "and").lower()}.png'
+    plt.savefig(filename, dpi=300, bbox_inches='tight')
+    print(f"✓ Saved: {filename}")
+    plt.close()
+
+# Generate word clouds for top aspects
+print("\nGenerating word clouds for key aspects...")
+for aspect in aspect_summary.head(3).index:
+    generate_aspect_wordclouds(df, aspect)
+
+for aspect in aspect_summary.tail(2).index:
+    generate_aspect_wordclouds(df, aspect)
+
+# 5. Sentiment trends over time
+print("\n" + "="*70)
+print("TEMPORAL ANALYSIS")
+print("="*70)
+
+df['date'] = pd.to_datetime(df['timestamp'], unit='ms')
+df['year_month'] = df['date'].dt.to_period('M')
+
+# Overall sentiment trend
+print("\nAnalyzing sentiment trends over time...")
+sentiment_over_time = df.groupby(['year_month', 'predicted_sentiment']).size().unstack(fill_value=0)
+
+plt.figure(figsize=(14, 6))
+sentiment_over_time.plot(kind='line', marker='o', ax=plt.gca(),
+                         color=['#d62728', '#ff7f0e', '#2ca02c'])
+plt.title('Overall Sentiment Trends Over Time', fontsize=14, fontweight='bold')
+plt.xlabel('Date', fontsize=12)
+plt.ylabel('Number of Reviews', fontsize=12)
+plt.legend(title='Sentiment', labels=['Negative', 'Neutral', 'Positive'])
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.savefig('sentiment_trend_overall.png', dpi=300, bbox_inches='tight')
+print("✓ Saved: sentiment_trend_overall.png")
+
+# Trend for specific aspects
+for aspect in aspect_summary.head(2).index:
+    aspect_df = df[df['topic_label'] == aspect]
+    trend = aspect_df.groupby(['year_month', 'predicted_sentiment']).size().unstack(fill_value=0)
+    
+    plt.figure(figsize=(14, 6))
+    trend.plot(kind='line', marker='o', ax=plt.gca(),
+               color=['#d62728', '#ff7f0e', '#2ca02c'])
+    plt.title(f'Sentiment Trend: {aspect}', fontsize=14, fontweight='bold')
+    plt.xlabel('Date', fontsize=12)
+    plt.ylabel('Number of Reviews', fontsize=12)
+    plt.legend(title='Sentiment', labels=['Negative', 'Neutral', 'Positive'])
+    plt.grid(True, alpha=0.3)
+    plt.tight_layout()
+    filename = f'sentiment_trend_{aspect.replace(" ", "_").replace("&", "and").lower()}.png'
+    plt.savefig(filename, dpi=300, bbox_inches='tight')
+    print(f"✓ Saved: {filename}")
+    plt.close()
+
+# Save detailed results
+aspect_summary.to_csv('aspect_summary.csv')
+print("\n✓ Saved: aspect_summary.csv")
+
+print("\n" + "="*70)
+print("ASPECT-BASED SENTIMENT ANALYSIS COMPLETE!")
+print("="*70)
+#+end_src
+
+
+
+* **PHASE 7: Final Report Generation**
+
+#+begin_src python :results output raw :wrap src :exports both :tangle 09_generate_final_report.py
+import pandas as pd
+import json
+import pickle
+from datetime import datetime
+
+print("="*70)
+print("GENERATING FINAL COMPREHENSIVE REPORT")
+print("="*70)
+
+# Load all necessary data
+df = pd.read_csv('all_beauty_predictions.csv')
+aspect_summary = pd.read_csv('aspect_summary.csv', index_col=0)
+
+with open('topic_labels.pkl', 'rb') as f:
+    topic_labels = pickle.load(f)
+
+with open('coherence_results.pkl', 'rb') as f:
+    coherence_results = pickle.load(f)
+
+# Load classification metrics from previous run
+from sklearn.metrics import classification_report, accuracy_score
+import joblib
+
+model = joblib.load('naive_bayes_model.pkl')
+
+# Read test data
+df_full = pd.read_csv('all_beauty_with_topics.csv')
+X_test_indices = df.index
+
+y_test = df_full.loc[X_test_indices, 'sentiment']
+y_pred = df['predicted_sentiment']
+
+accuracy = accuracy_score(y_test, y_pred)
+class_report = classification_report(y_test, y_pred, output_dict=True)
+
+# Create comprehensive JSON report
+report = {
+    'metadata': {
+        'report_generated': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+        'dataset': 'Amazon Reviews 2023 - All Beauty',
+        'analysis_type': 'Aspect-Based Sentiment Analysis (LDA + Naive Bayes)'
+    },
+    'dataset_statistics': {
+        'total_reviews': int(len(df_full)),
+        'processed_reviews': int(len(df)),
+        'date_range': {
+            'start': pd.to_datetime(df_full['timestamp'], unit='ms').min().strftime('%Y-%m-%d'),
+            'end': pd.to_datetime(df_full['timestamp'], unit='ms').max().strftime('%Y-%m-%d')
+        },
+        'unique_users': int(df_full['user_id'].nunique()),
+        'unique_products': int(df_full['parent_asin'].nunique()),
+        'rating_distribution': df_full['rating'].value_counts().sort_index().to_dict(),
+        'sentiment_distribution': df['predicted_sentiment'].value_counts().to_dict()
+    },
+    'topic_modeling': {
+        'method': 'Latent Dirichlet Allocation (LDA)',
+        'num_topics': int(coherence_results['optimal_topics']),
+        'coherence_score': float(coherence_results['coherence_scores'][
+            coherence_results['num_topics'].index(coherence_results['optimal_topics'])
+        ]),
+        'topics': {str(k): v for k, v in topic_labels.items()}
+    },
+    'classification': {
+        'model': 'Complement Naive Bayes',
+        'features': 'TF-IDF (5000 features) + Topic Probabilities',
+        'accuracy': float(accuracy),
+        'precision': {
+            'negative': float(class_report['negative']['precision']),
+            'neutral': float(class_report['neutral']['precision']),
+            'positive': float(class_report['positive']['precision']),
+            'weighted_avg': float(class_report['weighted avg']['precision'])
+        },
+        'recall': {
+            'negative': float(class_report['negative']['recall']),
+            'neutral': float(class_report['neutral']['recall']),
+            'positive': float(class_report['positive']['recall']),
+            'weighted_avg': float(class_report['weighted avg']['recall'])
+        },
+        'f1_score': {
+            'negative': float(class_report['negative']['f1-score']),
+            'neutral': float(class_report['neutral']['f1-score']),
+            'positive': float(class_report['positive']['f1-score']),
+            'weighted_avg': float(class_report['weighted avg']['f1-score'])
+        }
+    },
+    'aspect_based_insights': {
+        'overall_summary': aspect_summary.to_dict('index'),
+        'top_3_aspects': aspect_summary.head(3).index.tolist(),
+        'bottom_3_aspects': aspect_summary.tail(3).index.tolist()
+    }
+}
+
+# Save JSON report
+with open('absa_final_report.json', 'w') as f:
+    json.dump(report, f, indent=2)
+
+print("\n✓ JSON report saved: absa_final_report.json")
+
+# Create Excel report with multiple sheets
+print("\nCreating Excel report...")
+with pd.ExcelWriter('absa_final_report.xlsx', engine='openpyxl') as writer:
+    
+    # Sheet 1: Executive Summary
+    exec_summary = pd.DataFrame([
+        ['Dataset', 'Amazon Reviews 2023 - All Beauty'],
+        ['Total Reviews', len(df_full)],
+        ['Processed Reviews', len(df)],
+        ['Date Range', f"{report['dataset_statistics']['date_range']['start']} to {report['dataset_statistics']['date_range']['end']}"],
+        ['', ''],
+        ['Topic Modeling Method', 'LDA'],
+        ['Number of Topics', coherence_results['optimal_topics']],
+        ['Coherence Score', f"{report['topic_modeling']['coherence_score']:.4f}"],
+        ['', ''],
+        ['Classification Model', 'Complement Naive Bayes'],
+        ['Overall Accuracy', f"{accuracy:.4f}"],
+        ['Weighted F1-Score', f"{class_report['weighted avg']['f1-score']:.4f}"],
+    ], columns=['Metric', 'Value'])
+    exec_summary.to_excel(writer, sheet_name='Executive Summary', index=False)
+    
+    # Sheet 2: Topics
+    topics_df = pd.DataFrame([
+        {'Topic_ID': k, 'Topic_Label': v} 
+        for k, v in topic_labels.items()
+    ])
+    topics_df.to_excel(writer, sheet_name='Topics', index=False)
+    
+    # Sheet 3: Aspect Summary
+    aspect_summary.to_excel(writer, sheet_name='Aspect Summary')
+    
+    # Sheet 4: Classification Metrics
+    metrics_df = pd.DataFrame(class_report).T
+    metrics_df.to_excel(writer, sheet_name='Classification Metrics')
+    
+    # Sheet 5: Sentiment by Aspect
+    sentiment_by_aspect = pd.crosstab(
+        df['topic_label'],
+        df['predicted_sentiment']
+    )
+    sentiment_by_aspect.to_excel(writer, sheet_name='Sentiment by Aspect')
+    
+    # Sheet 6: Sample Predictions
+    sample_predictions = df[[
+        'text', 'rating', 'topic_label', 'sentiment', 
+        'predicted_sentiment', 'dominant_prob'
+    ]].head(200)
+    sample_predictions.to_excel(writer, sheet_name='Sample Predictions', index=False)
+    
+    # Sheet 7: Misclassifications
+    misclassified = df[df['sentiment'] != df['predicted_sentiment']][[
+        'text', 'rating', 'sentiment', 'predicted_sentiment', 'topic_label'
+    ]].head(100)
+    misclassified.to_excel(writer, sheet_name='Misclassifications', index=False)
+
+print("✓ Excel report saved: absa_final_report.xlsx")
+
+# Create a text summary report
+print("\nCreating text summary...")
+with open('absa_summary.txt', 'w', encoding='utf-8') as f:
+    f.write("="*70 + "\n")
+    f.write("ASPECT-BASED SENTIMENT ANALYSIS - FINAL REPORT\n")
+    f.write("Amazon Reviews 2023 - All Beauty Category\n")
+    f.write("="*70 + "\n\n")
+    
+    f.write("1. DATASET OVERVIEW\n")
+    f.write("-" * 70 + "\n")
+    f.write(f"Total Reviews: {len(df_full):,}\n")
+    f.write(f"Date Range: {report['dataset_statistics']['date_range']['start']} to {report['dataset_statistics']['date_range']['end']}\n")
+    f.write(f"Unique Users: {report['dataset_statistics']['unique_users']:,}\n")
+    f.write(f"Unique Products: {report['dataset_statistics']['unique_products']:,}\n\n")
+    
+    f.write("2. TOPIC MODELING RESULTS\n")
+    f.write("-" * 70 + "\n")
+    f.write(f"Method: Latent Dirichlet Allocation (LDA)\n")
+    f.write(f"Number of Topics: {coherence_results['optimal_topics']}\n")
+    f.write(f"Coherence Score: {report['topic_modeling']['coherence_score']:.4f}\n\n")
+    f.write("Discovered Topics:\n")
+    for topic_id, label in topic_labels.items():
+        f.write(f"  {topic_id}. {label}\n")
+    f.write("\n")
+    
+    f.write("3. CLASSIFICATION PERFORMANCE\n")
+    f.write("-" * 70 + "\n")
+    f.write(f"Model: Complement Naive Bayes\n")
+    f.write(f"Overall Accuracy: {accuracy:.4f}\n")
+    f.write(f"Weighted F1-Score: {class_report['weighted avg']['f1-score']:.4f}\n\n")
+    f.write("Per-Class Performance:\n")
+    for sentiment in ['negative', 'neutral', 'positive']:
+        f.write(f"\n  {sentiment.capitalize()}:\n")
+        f.write(f"    Precision: {class_report[sentiment]['precision']:.4f}\n")
+        f.write(f"    Recall:    {class_report[sentiment]['recall']:.4f}\n")
+        f.write(f"    F1-Score:  {class_report[sentiment]['f1-score']:.4f}\n")
+    f.write("\n")
+    
+    f.write("4. ASPECT-BASED INSIGHTS\n")
+    f.write("-" * 70 + "\n")
+    f.write("\nTop 3 Aspects (Highest Positive Sentiment):\n")
+    for i, aspect in enumerate(aspect_summary.head(3).index, 1):
+        pos_pct = aspect_summary.loc[aspect, 'Positive_%']
+        neg_pct = aspect_summary.loc[aspect, 'Negative_%']
+        net = aspect_summary.loc[aspect, 'Net_Sentiment']
+        f.write(f"  {i}. {aspect}\n")
+        f.write(f"     Positive: {pos_pct:.1f}% | Negative: {neg_pct:.1f}% | Net: +{net:.1f}%\n")
+    
+    f.write("\nBottom 3 Aspects (Areas for Improvement):\n")
+    for i, aspect in enumerate(aspect_summary.tail(3).index, 1):
+        pos_pct = aspect_summary.loc[aspect, 'Positive_%']
+        neg_pct = aspect_summary.loc[aspect, 'Negative_%']
+        net = aspect_summary.loc[aspect, 'Net_Sentiment']
+        f.write(f"  {i}. {aspect}\n")
+        f.write(f"     Positive: {pos_pct:.1f}% | Negative: {neg_pct:.1f}% | Net: {net:.1f}%\n")
+    
+    f.write("\n" + "="*70 + "\n")
+    f.write("Report generated: " + datetime.now().strftime('%Y-%m-%d %H:%M:%S') + "\n")
+    f.write("="*70 + "\n")
+
+print("✓ Text summary saved: absa_summary.txt")
+
+print("\n" + "="*70)
+print("ALL REPORTS GENERATED SUCCESSFULLY!")
+print("="*70)
+print("\nGenerated files:")
+print("  📄 absa_final_report.json")
+print("  📊 absa_final_report.xlsx")
+print("  📝 absa_summary.txt")
+print("\n" + "="*70)
+#+end_src
+
+
+* **PHASE 8: Optional Advanced Analyses**
+
+** **A. Product-Level Analysis**
+
+#+begin_src python :results output raw :wrap src :exports both :tangle 10_product_level_analysis.py
+import pandas as pd
+import matplotlib.pyplot as plt
+
+df = pd.read_csv('all_beauty_predictions.csv')
+
+# Analyze products with most reviews
+product_analysis = df.groupby('parent_asin').agg({
+    'rating': ['count', 'mean'],
+    'predicted_sentiment': lambda x: (x == 'positive').sum() / len(x) * 100
+}).round(2)
+
+product_analysis.columns = ['Review_Count', 'Avg_Rating', 'Positive_%']
+product_analysis = product_analysis[product_analysis['Review_Count'] >= 50]  # At least 50 reviews
+product_analysis = product_analysis.sort_values('Review_Count', ascending=False)
+
+print("Top 20 Most Reviewed Products:")
+print(product_analysis.head(20))
+
+product_analysis.head(20).to_csv('top_products_analysis.csv')
+print("\nSaved: top_products_analysis.csv")
+#+end_src
+
+** **B. User Behavior Analysis**
+
+#+begin_src python :results output raw :wrap src :exports both :tangle 11_user_behavior_analysis.py
+import pandas as pd
+
+df = pd.read_csv('all_beauty_predictions.csv')
+
+# Analyze users with most reviews
+user_analysis = df.groupby('user_id').agg({
+    'rating': ['count', 'mean'],
+    'predicted_sentiment': lambda x: x.mode()[0] if len(x) > 0 else None
+})
+
+user_analysis.columns = ['Review_Count', 'Avg_Rating', 'Dominant_Sentiment']
+user_analysis = user_analysis[user_analysis['Review_Count'] >= 10]  # Power users
+
+print("Power Users Analysis:")
+print(user_analysis.describe())
+
+# Sentiment distribution of power users
+print("\nPower Users Sentiment Distribution:")
+print(user_analysis['Dominant_Sentiment'].value_counts())
+#+end_src
+

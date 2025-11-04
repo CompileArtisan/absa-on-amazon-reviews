@@ -1,0 +1,42 @@
+Loading data...
+Original dataset: 701528 reviews
+After removing null text: 701316 reviews
+
+Cleaning text...
+Tokenizing and lemmatizing...
+After filtering short reviews: 530546 reviews
+
+======================================================================
+PREPROCESSING COMPLETE
+======================================================================
+Final dataset: 530546 reviews
+
+Sentiment distribution:
+sentiment
+positive    367721
+negative    116231
+neutral      46594
+Name: count, dtype: int64
+
+Percentages:
+sentiment
+positive    69.309918
+negative    21.907808
+neutral      8.782273
+Name: proportion, dtype: float64
+
+======================================================================
+PREPROCESSING EXAMPLES
+======================================================================
+
+Example 1:
+Original: This spray is really nice. It smells really good, goes on really fine, and does the trick. I will say it feels like you need a lot of it though to get...
+Cleaned: this spray is really nice it smells really good goes on really fine and does the trick i will say it feels like you need a lot of it though to get the...
+Tokens: ['spray', 'really', 'nice', 'smell', 'really', 'good', 'go', 'really', 'fine', 'trick', 'say', 'feel', 'like', 'need', 'lot', 'though', 'get', 'texture', 'want', 'lot']
+
+Example 2:
+Original: This product does what I need it to do, I just wish it was odorless or had a soft coconut smell. Having my head smell like an orange coffee is offputt...
+Cleaned: this product does what i need it to do i just wish it was odorless or had a soft coconut smell having my head smell like an orange coffee is offputtin...
+Tokens: ['product', 'need', 'wish', 'odorless', 'soft', 'coconut', 'smell', 'head', 'smell', 'like', 'orange', 'coffee', 'offputting', 'granted', 'know', 'smell', 'described', 'hoping', 'would', 'light']
+
+✓ Preprocessed data saved to all_beauty_preprocessed.csv

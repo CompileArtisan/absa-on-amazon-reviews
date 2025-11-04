@@ -8,4 +8,8 @@ tmp/
 build
 htmlcov
 
-/dataset
+venv
+
+*.jsonl.gz
+*.json
+*.csv
