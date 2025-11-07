@@ -1,0 +1,62 @@
+Loading data...
+
+Creating corpus for full dataset...
+
+Training final LDA model with 15 topics...
+
+======================================================================
+DISCOVERED TOPICS
+======================================================================
+
+Topic 0:
+  0.111*"not" + 0.064*"like" + 0.038*"would" + 0.037*"get" + 0.023*"make" + 0.022*"even" + 0.022*"also" + 0.022*"much" + 0.021*"little" + 0.018*"feel" + 0.015*"better" + 0.014*"still" + 0.014*"way" + 0.013*"lot" + 0.012*"need"
+
+Topic 1:
+  0.127*"look" + 0.065*"wig" + 0.042*"natural" + 0.036*"wear" + 0.034*"picture" + 0.022*"real" + 0.021*"looked" + 0.020*"black" + 0.017*"length" + 0.017*"style" + 0.016*"compliment" + 0.016*"full" + 0.015*"wearing" + 0.013*"inch" + 0.013*"dark"
+
+Topic 2:
+  0.080*"use" + 0.064*"time" + 0.045*"day" + 0.040*"using" + 0.034*"first" + 0.031*"long" + 0.025*"put" + 0.024*"week" + 0.023*"last" + 0.021*"dry" + 0.019*"back" + 0.019*"take" + 0.018*"month" + 0.016*"every" + 0.016*"without"
+
+Topic 3:
+  0.193*"skin" + 0.053*"oil" + 0.041*"smooth" + 0.029*"lotion" + 0.025*"feel" + 0.024*"sensitive" + 0.024*"feeling" + 0.024*"leaf" + 0.021*"body" + 0.017*"ingredient" + 0.017*"oily" + 0.016*"dry" + 0.015*"muy" + 0.015*"sticky" + 0.014*"greasy"
+
+Topic 4:
+  0.114*"product" + 0.059*"one" + 0.036*"used" + 0.025*"got" + 0.022*"bought" + 0.017*"best" + 0.016*"year" + 0.016*"amazing" + 0.016*"tried" + 0.015*"received" + 0.014*"two" + 0.013*"give" + 0.013*"review" + 0.013*"never" + 0.013*"different"
+
+Topic 5:
+  0.080*"love" + 0.072*"great" + 0.053*"good" + 0.048*"work" + 0.044*"really" + 0.038*"well" + 0.033*"easy" + 0.028*"quality" + 0.027*"buy" + 0.026*"recommend" + 0.026*"soft" + 0.026*"price" + 0.023*"definitely" + 0.023*"nice" + 0.020*"perfect"
+
+Topic 6:
+  0.151*"lash" + 0.038*"eyelash" + 0.038*"shave" + 0.036*"razor" + 0.031*"eye" + 0.031*"lip" + 0.029*"eyeliner" + 0.029*"shaver" + 0.027*"blade" + 0.027*"powder" + 0.024*"mascara" + 0.021*"eyebrow" + 0.021*"liner" + 0.020*"shaving" + 0.017*"pair"
+
+Topic 7:
+  0.067*"money" + 0.048*"worth" + 0.043*"disappointed" + 0.041*"item" + 0.030*"box" + 0.030*"waste" + 0.027*"package" + 0.027*"arrived" + 0.026*"cheap" + 0.024*"return" + 0.021*"broke" + 0.020*"glue" + 0.019*"broken" + 0.018*"half" + 0.017*"horrible"
+
+Topic 8:
+  0.225*"color" + 0.098*"bottle" + 0.078*"light" + 0.035*"spray" + 0.025*"white" + 0.024*"red" + 0.024*"pink" + 0.021*"brown" + 0.020*"weight" + 0.017*"match" + 0.017*"blend" + 0.017*"foundation" + 0.016*"blue" + 0.015*"pump" + 0.013*"shade"
+
+Topic 9:
+  0.192*"smell" + 0.078*"scent" + 0.039*"soap" + 0.037*"strong" + 0.034*"beard" + 0.022*"fragrance" + 0.018*"fresh" + 0.018*"deodorant" + 0.017*"perfume" + 0.014*"bar" + 0.014*"christmas" + 0.014*"chemical" + 0.013*"birthday" + 0.013*"body" + 0.013*"smelled"
+
+Topic 10:
+  0.086*"face" + 0.043*"eye" + 0.039*"cream" + 0.038*"mask" + 0.027*"night" + 0.027*"difference" + 0.021*"line" + 0.020*"noticed" + 0.018*"area" + 0.017*"morning" + 0.015*"roller" + 0.015*"help" + 0.014*"serum" + 0.012*"spot" + 0.012*"burn"
+
+Topic 11:
+  0.188*"brush" + 0.068*"clean" + 0.030*"teeth" + 0.025*"battery" + 0.024*"bristle" + 0.023*"handle" + 0.019*"toothbrush" + 0.018*"charge" + 0.017*"cleaning" + 0.015*"power" + 0.014*"unit" + 0.012*"brushing" + 0.011*"setting" + 0.011*"drill" + 0.010*"cleaner"
+
+Topic 12:
+  0.223*"nail" + 0.087*"polish" + 0.085*"gel" + 0.041*"coat" + 0.030*"delivery" + 0.025*"base" + 0.022*"professional" + 0.020*"top" + 0.018*"delivered" + 0.017*"file" + 0.017*"beginner" + 0.016*"lamp" + 0.015*"glitter" + 0.015*"plate" + 0.014*"sticker"
+
+Topic 13:
+  0.433*"hair" + 0.037*"thick" + 0.032*"curl" + 0.025*"shampoo" + 0.021*"clip" + 0.020*"comb" + 0.018*"shed" + 0.017*"conditioner" + 0.016*"heat" + 0.015*"shedding" + 0.013*"straight" + 0.013*"tangle" + 0.013*"curly" + 0.012*"iron" + 0.011*"thin"
+
+Topic 14:
+  0.025*"head" + 0.025*"small" + 0.024*"keep" + 0.023*"size" + 0.023*"fit" + 0.020*"enough" + 0.020*"hold" + 0.016*"easily" + 0.015*"big" + 0.015*"cut" + 0.014*"bag" + 0.014*"plastic" + 0.013*"videoid" + 0.013*"part" + 0.012*"around"
+
+Creating interactive visualization...
+
+✓ Model saved to beauty_lda_final.model
+✓ Topic labels saved to topic_labels.pkl
+✓ Visualization saved to lda_visualization.html
+
+>>> Open lda_visualization.html in your browser to explore topics!

@@ -1,12 +1,13 @@
-#+title: Project
-
-# Aspect-based sentiment analysis with LDA and Naive Bayes
+#+title: Aspect-based sentiment analysis with LDA and Naive Bayes
 
 
+* *Prerequisites*
+- Download Data from [[https://amazon-reviews-2023.github.io/][Amazon Reviews'23]].
 
-* **PHASE 1: Environment Setup & Data Loading**
 
-** **Step 1.1: Install Required Libraries**
+* *PHASE 1: Environment Setup & Data Loading*
+
+** *Step 1.1: Install Required Libraries*
 
 #+begin_src bash :results output raw :wrap src :exports both
 
@@ -20,7 +21,7 @@ pip install pandas numpy scikit-learn gensim nltk matplotlib seaborn
 pip install pyLDAvis wordcloud openpyxl joblib scipy
 #+end_src
 
-** **Step 1.2: Download NLTK Data**
+** *Step 1.2: Download NLTK Data*
 
 #+begin_src python :results output raw :wrap src :exports both :tangle download_nltk_data.py
 import nltk
@@ -39,9 +40,9 @@ print("NLTK data downloaded successfully!")
 #+begin_src
 #+end_src
 
-* **PHASE 2: Load & Explore Data**
+* *PHASE 2: Load & Explore Data*
 
-** **Step 2.1: Load the JSONL.GZ File**
+** *Step 2.1: Load the JSONL.GZ File*
 
 #+begin_src python :results output raw :wrap src :exports both :tangle 01_load_data.py
 import json
@@ -85,7 +86,7 @@ print(f"\nDataset shape: {df.shape}")
 print(f"\nColumns: {df.columns.tolist()}")
 #+end_src
 
-** **Step 2.2: Initial Data Exploration**
+** *Step 2.2: Initial Data Exploration*
 
 #+begin_src python :results output raw :wrap src :exports both :tangle 02_explore_data.py
 import pandas as pd
@@ -182,9 +183,9 @@ for i in range(3):
 #+end_src
 
 
-* **PHASE 3: Data Preprocessing**
+* *PHASE 3: Data Preprocessing*
 
-** **Step 3.1: Text Cleaning & Preprocessing**
+** *Step 3.1: Text Cleaning & Preprocessing*
 
 #+begin_src python :results output raw :wrap src :exports both :tangle 03_preprocess_data.py
 import pandas as pd
@@ -306,9 +307,9 @@ for i in range(2):
 print("\n✓ Preprocessed data saved to all_beauty_preprocessed.csv")
 #+end_src
 
-* **PHASE 4: LDA Topic Modeling**
+* *PHASE 4: LDA Topic Modeling*
 
-** **Step 4.1: Find Optimal Number of Topics**
+** *Step 4.1: Find Optimal Number of Topics*
 
 #+begin_src python :results output raw :wrap src :exports both :tangle 04_lda_topic_modeling.py
 import pandas as pd
@@ -445,7 +446,7 @@ print("\n✓ Results saved to coherence_results.pkl")
 print("✓ Plot saved to topic_coherence_scores.png")
 #+end_src
 
-** **Step 4.2: Train Final LDA Model**
+** *Step 4.2: Train Final LDA Model*
 
 #+begin_src python :results output raw :wrap src :exports both :tangle 05_train_final_lda.py
 import pandas as pd
@@ -530,7 +531,7 @@ print("✓ Visualization saved to lda_visualization.html")
 print("\n>>> Open lda_visualization.html in your browser to explore topics!")
 #+end_src
 
-** **Step 4.3: Assign Topics to Reviews**
+** *Step 4.3: Assign Topics to Reviews*
 
 #+begin_src python :results output raw :wrap src :exports both :tangle 06_assign_topics.py
 import pandas as pd
@@ -611,7 +612,7 @@ print(df['topic_label'].value_counts())
 print("\n✓ Data with topics saved to all_beauty_with_topics.csv")
 #+end_src
 
-* **PHASE 5: Naive Bayes Classification**
+* *PHASE 5: Naive Bayes Classification*
 
 #+begin_src python :results output raw :wrap src :exports both :tangle 07_naive_bayes_classification.py
 import pandas as pd
@@ -770,7 +771,7 @@ print("✓ Predictions saved to all_beauty_predictions.csv")
 #+end_src
 
 
-* **PHASE 6: Aspect-Based Sentiment Analysis**
+* *PHASE 6: Aspect-Based Sentiment Analysis*
 
 #+begin_src python :results output raw :wrap src :exports both :tangle 08_aspect_sentiment_analysis.py
 import pandas as pd
@@ -1042,7 +1043,7 @@ print("="*70)
 
 
 
-* **PHASE 7: Final Report Generation**
+* *PHASE 7: Final Report Generation*
 
 #+begin_src python :results output raw :wrap src :exports both :tangle 09_generate_final_report.py
 import pandas as pd
@@ -1273,9 +1274,9 @@ print("\n" + "="*70)
 #+end_src
 
 
-* **PHASE 8: Optional Advanced Analyses**
+* *PHASE 8: Optional Advanced Analyses*
 
-** **A. Product-Level Analysis**
+** *A. Product-Level Analysis*
 
 #+begin_src python :results output raw :wrap src :exports both :tangle 10_product_level_analysis.py
 import pandas as pd
@@ -1300,7 +1301,7 @@ product_analysis.head(20).to_csv('top_products_analysis.csv')
 print("\nSaved: top_products_analysis.csv")
 #+end_src
 
-** **B. User Behavior Analysis**
+** *B. User Behavior Analysis*
 
 #+begin_src python :results output raw :wrap src :exports both :tangle 11_user_behavior_analysis.py
 import pandas as pd
@@ -1323,4 +1324,3 @@ print(user_analysis.describe())
 print("\nPower Users Sentiment Distribution:")
 print(user_analysis['Dominant_Sentiment'].value_counts())
 #+end_src
-

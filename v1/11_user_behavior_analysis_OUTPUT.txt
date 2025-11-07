@@ -1,0 +1,16 @@
+Power Users Analysis:
+       Review_Count  Avg_Rating
+count     29.000000   29.000000
+mean      14.655172    4.338049
+std        5.300107    0.395777
+min       10.000000    3.437500
+25%       10.000000    4.185185
+50%       14.000000    4.363636
+75%       16.000000    4.571429
+max       31.000000    5.000000
+
+Power Users Sentiment Distribution:
+Dominant_Sentiment
+positive    28
+negative     1
+Name: count, dtype: int64

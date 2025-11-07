@@ -1,0 +1,62 @@
+Loading data with topics...
+Dataset size: 530546
+
+Sentiment distribution:
+sentiment
+positive    367721
+negative    116231
+neutral      46594
+Name: count, dtype: int64
+
+Creating TF-IDF features...
+Combining TF-IDF and topic features...
+Feature shape: (530546, 5015)
+
+Splitting data...
+Training set: 424436 samples
+Test set: 106110 samples
+
+======================================================================
+TRAINING NAIVE BAYES MODELS
+======================================================================
+
+1. Training Multinomial Naive Bayes...
+   Accuracy: 0.8185
+
+2. Training Complement Naive Bayes...
+   Accuracy: 0.8057
+
+>>> Using Multinomial Naive Bayes (better performance)
+
+======================================================================
+HYPERPARAMETER TUNING
+======================================================================
+
+Performing grid search...
+Fitting 5 folds for each of 6 candidates, totalling 30 fits
+
+Best parameters: {'alpha': 0.001}
+Best CV score: 0.7939
+
+======================================================================
+EVALUATION: Multinomial Naive Bayes (Tuned)
+======================================================================
+
+Classification Report:
+              precision    recall  f1-score   support
+
+    negative     0.6129    0.8693    0.7190     23246
+     neutral     0.3040    0.1108    0.1625      9319
+    positive     0.9213    0.8737    0.8968     73545
+
+    accuracy                         0.8057    106110
+   macro avg     0.6127    0.6179    0.5928    106110
+weighted avg     0.7995    0.8057    0.7934    106110
+
+
+✓ Confusion matrix saved to confusion_matrix.png
+
+✓ Models saved:
+  - naive_bayes_model.pkl
+  - tfidf_vectorizer.pkl
+✓ Predictions saved to all_beauty_predictions.csv

@@ -51,21 +51,6 @@ aspect_sentiment.plot(kind='bar', stacked=False, ax=axes[1],
 axes[1].set_title('Sentiment Distribution by Aspect (%)', fontsize=14, fontweight='bold')
 axes[1].set_xlabel('Product Aspect', fontsize=12)
 axes[1].set_ylabel('Percentage', fontsize=12)
-axes[1].legend(title='Sentiment', labels
-
-
-
-## Prompt:
-11/4/2025, 9:18:11 PM
-
-Continue
-
-
-
-## Response:
-11/4/2025, 9:19:58 PM
-
-```python
 axes[1].legend(title='Sentiment', labels=['Negative', 'Neutral', 'Positive'])
 axes[1].tick_params(axis='x', rotation=45)
 axes[1].grid(axis='y', alpha=0.3)

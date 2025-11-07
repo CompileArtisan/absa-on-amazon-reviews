@@ -1,0 +1,357 @@
+Loading predictions...
+Total reviews: 106110
+
+======================================================================
+ASPECT-BASED SENTIMENT ANALYSIS
+======================================================================
+
+Sentiment Distribution by Aspect (%):
+predicted_sentiment          negative  neutral  positive
+topic_label                                             
+Hair Care & Styling             45.24     5.78     48.98
+Makeup & Cosmetics              38.55     1.58     59.88
+Nail Care & Polish               5.69     0.00     94.31
+Price & Value                   35.38     3.85     60.77
+Product Quality & Packaging      8.79     0.82     90.39
+Scent & Fragrance               32.60     1.00     66.40
+Shipping & Delivery             99.09     0.00      0.91
+Skin Care & Moisturizers        47.38     2.42     50.20
+
+✓ Saved: aspect_sentiment_distribution.png
+✓ Saved: absa_heatmap.png
+
+======================================================================
+ASPECT ANALYSIS - STRENGTHS & WEAKNESSES
+======================================================================
+
+Aspect Summary (sorted by Net Sentiment):
+                             Total_Reviews  ...  Net_Sentiment
+topic_label                                 ...               
+Nail Care & Polish                     738  ...          88.62
+Product Quality & Packaging          32543  ...          81.59
+Scent & Fragrance                    17184  ...          33.80
+Price & Value                          130  ...          25.38
+Makeup & Cosmetics                    5326  ...          21.33
+Hair Care & Styling                  43734  ...           3.74
+Skin Care & Moisturizers               496  ...           2.82
+Shipping & Delivery                    328  ...         -98.17
+
+[8 rows x 5 columns]
+
+🟢 STRONGEST ASPECTS:
+  • Nail Care & Polish: 94.3% positive, 5.7% negative
+  • Product Quality & Packaging: 90.4% positive, 8.8% negative
+  • Scent & Fragrance: 66.4% positive, 32.6% negative
+
+🔴 WEAKEST ASPECTS:
+  • Hair Care & Styling: 49.0% positive, 45.2% negative
+  • Skin Care & Moisturizers: 50.2% positive, 47.4% negative
+  • Shipping & Delivery: 0.9% positive, 99.1% negative
+
+======================================================================
+DETAILED ASPECT ANALYSIS
+======================================================================
+
+======================================================================
+ASPECT: Nail Care & Polish
+======================================================================
+
+Total reviews: 738
+
+Sentiment Distribution:
+  Positive  :    696 ( 94.3%)
+  Negative  :     42 (  5.7%)
+
+Average Rating: 4.57/5.0
+
+POSITIVE EXAMPLES:
+
+  [1] Rating: 5/5 | Confidence: 0.17
+      "I have been using this facial cleanser with the toner and moisturizer for a few weeks now and I have to say that there is a noticeable difference with my skin.  My pores are smaller, my skin is lovely..."
+
+  [2] Rating: 5/5 | Confidence: 0.23
+      "I have been purchasing Shea Butter for over 2 decades for manufacturing body products and soap...I ran out unexpectedly and needed some Shea Butter quickly...I took a chance with this and it paid off!..."
+
+NEGATIVE EXAMPLES:
+
+  [1] Rating: 4/5 | Confidence: 0.20
+      "Muy bueno el material; pero lamentablemente me llegaron muy pequeños... Para el largo de mi cabellos.  Una pena lo regalaré .lo recomiemdo para pelo corto ,mi pelo es mitad de espalda."
+
+  [2] Rating: 3/5 | Confidence: 0.21
+      "The seal was broken under the lid when I received the package causing all of the coconut oil liquid to leak out leaving me with a dry scrub. Beware this is a scrub containing salt and you can certainl..."
+
+======================================================================
+ASPECT: Product Quality & Packaging
+======================================================================
+
+Total reviews: 32,543
+
+Sentiment Distribution:
+  Positive  : 29,414 ( 90.4%)
+  Neutral   :    267 (  0.8%)
+  Negative  :  2,862 (  8.8%)
+
+Average Rating: 4.60/5.0
+
+POSITIVE EXAMPLES:
+
+  [1] Rating: 4/5 | Confidence: 0.28
+      "works good, but should be a bigger role for the price"
+
+  [2] Rating: 5/5 | Confidence: 0.22
+      "I Love Revel and was THRILLED to find them on Amazon!!  Amazingly smooth dip, super easy to work with!  The color is gorgeous!  These dips are a MUST!"
+
+NEGATIVE EXAMPLES:
+
+  [1] Rating: 1/5 | Confidence: 0.27
+      "Really poor quality, cheap looking"
+
+  [2] Rating: 5/5 | Confidence: 0.24
+      "Update: the company contacted me and sent me a new set. Nice colors and great quality.<br /><br />Color XF030 came completely empty as you can see in the pictures."
+
+NEUTRAL EXAMPLES:
+
+  [1] Rating: 1/5 | Confidence: 0.22
+      "Really doesn't have the mirror finish, just metallic looking"
+
+  [2] Rating: 4/5 | Confidence: 0.18
+      "They’re great, but I have a big head so they didn’t sit right on me."
+
+======================================================================
+ASPECT: Scent & Fragrance
+======================================================================
+
+Total reviews: 17,184
+
+Sentiment Distribution:
+  Positive  : 11,410 ( 66.4%)
+  Neutral   :    172 (  1.0%)
+  Negative  :  5,602 ( 32.6%)
+
+Average Rating: 3.90/5.0
+
+POSITIVE EXAMPLES:
+
+  [1] Rating: 5/5 | Confidence: 0.25
+      "Enjoyed this product so much I ordered it twice."
+
+  [2] Rating: 5/5 | Confidence: 0.25
+      "I gave this to my 10-year-old granddaughter and she loved it! It came with so many makeup items!"
+
+NEGATIVE EXAMPLES:
+
+  [1] Rating: 3/5 | Confidence: 0.36
+      "I bought this to replace a similar, more expensive version. It stopped working after 2 uses. I loved my other one. I used it daily and it was a favorite among guests. It held up great, even after fall..."
+
+  [2] Rating: 4/5 | Confidence: 0.17
+      "Wife: This came with two bottles of gel remover and one bottle of latex, a buffer and a pusher tool.  after applying it, my nail felt weird like heavy-ish. But it did work for the most part, I had to ..."
+
+NEUTRAL EXAMPLES:
+
+  [1] Rating: 3/5 | Confidence: 0.22
+      "Pack of 5: 3 have a inside material added, then 2 were just the black material.  Not consistent, the thinner ones are better for comfort."
+
+  [2] Rating: 5/5 | Confidence: 0.20
+      "This COULD be a bit longer but there's no reason it shouldn't have 5 stars. It's stretchy, long ENOUGH, soft and the color I ordered (coral pink) is lovely (:.<br />I'll probably buy more but I've alr..."
+
+======================================================================
+ASPECT: Price & Value
+======================================================================
+
+Total reviews: 130
+
+Sentiment Distribution:
+  Positive  :     79 ( 60.8%)
+  Neutral   :      5 (  3.8%)
+  Negative  :     46 ( 35.4%)
+
+Average Rating: 3.85/5.0
+
+POSITIVE EXAMPLES:
+
+  [1] Rating: 5/5 | Confidence: 0.19
+      "I never could put on false lashes until I got these.  They are so easy to put on and stay on a long time.  Eyeliner has a good consistency and goes on easily.  Once the eyeliner ins on, the lashes jus..."
+
+  [2] Rating: 5/5 | Confidence: 0.16
+      "I have VERY sensitive eyes and lashes. Most mascaras cause irritation, breakouts on my lids and lash loss. This mascara doesn't irritate them at all!! I've only found that to be true with one other br..."
+
+NEGATIVE EXAMPLES:
+
+  [1] Rating: 3/5 | Confidence: 0.19
+      "the lashes were nice but the eyeline sticks to the magnets when you take off the lashes, you have to clean the magnets on the lashes after. overall looked alr."
+
+  [2] Rating: 2/5 | Confidence: 0.18
+      "Great setup, love the case & easy lash applicator. However the magnets on the applicator are stronger than the lash magnets so they never connect. I spent at least 2 hours and every method I could thi..."
+
+NEUTRAL EXAMPLES:
+
+  [1] Rating: 4/5 | Confidence: 0.21
+      "IT IS TRUE.  THIS SHAVER DOES SHAVE YOUR NECK CLOSER THAN THE OLD NORELCO SHAVERS DID."
+
+  [2] Rating: 5/5 | Confidence: 0.19
+      "Great shaver.  As good as my Braun Series 7 Shaver. But 1/6 the cost.  Do you think Braun might be profiteering?"
+
+======================================================================
+ASPECT: Makeup & Cosmetics
+======================================================================
+
+Total reviews: 5,326
+
+Sentiment Distribution:
+  Positive  :  3,189 ( 59.9%)
+  Neutral   :     84 (  1.6%)
+  Negative  :  2,053 ( 38.5%)
+
+Average Rating: 3.68/5.0
+
+POSITIVE EXAMPLES:
+
+  [1] Rating: 5/5 | Confidence: 0.25
+      "I was experiencing extreme itching on my calves after taking a shower for several hours.  I tried every lotion and oil to no avail.  When I purchased this product I also ordered scented oils to add to..."
+
+  [2] Rating: 4/5 | Confidence: 0.24
+      "MY Positives: No streaks or unsightly orange-y spots, noticeable color after 1 use, smell (like peach tea) is less-bad than old-school tanners, and I only need to use it every 2-4 days to maintain col..."
+
+NEGATIVE EXAMPLES:
+
+  [1] Rating: 1/5 | Confidence: 0.20
+      "I followed the directions and the nails all popped off after one hour."
+
+  [2] Rating: 3/5 | Confidence: 0.18
+      "It takes only 4 weeks before he gray hair reappear."
+
+NEUTRAL EXAMPLES:
+
+  [1] Rating: 1/5 | Confidence: 0.15
+      "Takes 10 + passes to cut one patch of your face. THEN, it still leaves multiple, multiple hairs I then had to go over with a razor.  Cutting quality is a 2 out of 10."
+
+  [2] Rating: 4/5 | Confidence: 0.22
+      "pump on the shampoo doesn't work, I have to take it off every time I use it. very inconvenient."
+
+======================================================================
+ASPECT: Hair Care & Styling
+======================================================================
+
+Total reviews: 43,734
+
+Sentiment Distribution:
+  Positive  : 21,420 ( 49.0%)
+  Neutral   :  2,530 (  5.8%)
+  Negative  : 19,784 ( 45.2%)
+
+Average Rating: 3.42/5.0
+
+POSITIVE EXAMPLES:
+
+  [1] Rating: 5/5 | Confidence: 0.18
+      "I was a bit skeptical at first but, this product is great. Not only was the nail polish remover gentle on my nails and skin; it also removed the nail polish I was wearing with minimal effort. I would ..."
+
+  [2] Rating: 5/5 | Confidence: 0.17
+      "Love the smell of pheromone and the scent of the  powder is very light not overwhelming"
+
+NEGATIVE EXAMPLES:
+
+  [1] Rating: 4/5 | Confidence: 0.25
+      "I have to say I was so surprised by the pigmentation this pallete had. Now I won’t lie the more pastel shades did disappoint me, but I had low hopes for those anyway, they’re hard to get right. One ot..."
+
+  [2] Rating: 1/5 | Confidence: 0.24
+      "Not what I was expecting.  Will never use.  May cut off the shield and just use as a hat in someway."
+
+NEUTRAL EXAMPLES:
+
+  [1] Rating: 4/5 | Confidence: 0.22
+      "Its okay im a licensed hairstylist for 20 yrs to me its a little thick i had to razor cut alot of hair off the top to get it to lay flat .also the color of the scalp is too dark an orangy. More yellow..."
+
+  [2] Rating: 2/5 | Confidence: 0.26
+      "This mascara has a lot of product on the brush, which can make application messy and lead to staining on the eyelids. Additionally, the mascara tends to clump on the lashes and make them stick togethe..."
+
+======================================================================
+ASPECT: Skin Care & Moisturizers
+======================================================================
+
+Total reviews: 496
+
+Sentiment Distribution:
+  Positive  :    249 ( 50.2%)
+  Neutral   :     12 (  2.4%)
+  Negative  :    235 ( 47.4%)
+
+Average Rating: 3.62/5.0
+
+POSITIVE EXAMPLES:
+
+  [1] Rating: 3/5 | Confidence: 0.18
+      "The wig is gorgeous and is very full, does tangle quickly but once brushed threw it’s fine, another issue is does frizz up  bit until I sprayed some wave mist with frizz control.. other wise it’s a ve..."
+
+  [2] Rating: 5/5 | Confidence: 0.21
+      "Just got these extensions and I’m completely in love for it. I’ve bought the Dark ash blonde highlight medium blonde. It matches perfect with my hair color and the thickness makes a real difference in..."
+
+NEGATIVE EXAMPLES:
+
+  [1] Rating: 2/5 | Confidence: 0.15
+      "I've been wearing this closure with deep wave bundles for about a month and a half now.  The closure is made of low quality hair that tangles.  It looked really good for about two weeks then started t..."
+
+  [2] Rating: 1/5 | Confidence: 0.18
+      "False advertising for this product. It was advertised as no shedding when in fact it has major shedding. There were also strands of plastic hair in it. It doesn't appear to be human hair but synthetic..."
+
+NEUTRAL EXAMPLES:
+
+  [1] Rating: 5/5 | Confidence: 0.26
+      "The pros of the hair<br />- full closure and wig<br />- true to length<br />- very black ( no need to add black dye)<br />- soft<br /><br />The cons<br />- sheds a little<br />- takes time to bleach<b..."
+
+  [2] Rating: 5/5 | Confidence: 0.27
+      "Very nice full wig. The lace is soft and maneuverable. It has a nice full lace ear to ear lace. I do suggest bleaching the knots and plucking the hairline a little more"
+
+======================================================================
+ASPECT: Shipping & Delivery
+======================================================================
+
+Total reviews: 328
+
+Sentiment Distribution:
+  Positive  :      3 (  0.9%)
+  Negative  :    325 ( 99.1%)
+
+Average Rating: 1.35/5.0
+
+POSITIVE EXAMPLES:
+
+  [1] Rating: 5/5 | Confidence: 0.19
+      "As described. Very convenient to have, saves a lot of space. Worth every penny!!!"
+
+  [2] Rating: 1/5 | Confidence: 0.13
+      "Arrived cracked and with debris in the hole.  Item is too small and too thick for proper gua sha technique."
+
+NEGATIVE EXAMPLES:
+
+  [1] Rating: 1/5 | Confidence: 0.20
+      "I was very excited about receiving my unit, but once I opened the box I was so disappointed not what I expected at all as soon as I opened the box and ran my fingers through it, It began to shed badly..."
+
+  [2] Rating: 1/5 | Confidence: 0.21
+      "It is awful!  It doesn’t work. I am very disappointed, don’t waste your money."
+
+======================================================================
+GENERATING WORD CLOUDS
+======================================================================
+
+Generating word clouds for key aspects...
+✓ Saved: wordcloud_nail_care_and_polish.png
+✓ Saved: wordcloud_product_quality_and_packaging.png
+✓ Saved: wordcloud_scent_and_fragrance.png
+✓ Saved: wordcloud_skin_care_and_moisturizers.png
+✓ Saved: wordcloud_shipping_and_delivery.png
+
+======================================================================
+TEMPORAL ANALYSIS
+======================================================================
+
+Analyzing sentiment trends over time...
+✓ Saved: sentiment_trend_overall.png
+✓ Saved: sentiment_trend_nail_care_and_polish.png
+✓ Saved: sentiment_trend_product_quality_and_packaging.png
+
+✓ Saved: aspect_summary.csv
+
+======================================================================
+ASPECT-BASED SENTIMENT ANALYSIS COMPLETE!
+======================================================================

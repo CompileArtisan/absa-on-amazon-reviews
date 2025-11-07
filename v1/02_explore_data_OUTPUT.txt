@@ -1,0 +1,74 @@
+======================================================================
+DATASET OVERVIEW
+======================================================================
+
+Total reviews: 701,528
+Date range: 2000-11-01 04:24:18 to 2023-09-09 00:39:36.666000
+Unique users: 631,986
+Unique products: 112,565
+Verified purchases: 634,969 (90.5%)
+
+======================================================================
+RATING DISTRIBUTION
+======================================================================
+rating
+1.0    102080
+2.0     43034
+3.0     56307
+4.0     79381
+5.0    420726
+Name: count, dtype: int64
+
+Percentages:
+rating
+1.0    14.551094
+2.0     6.134324
+3.0     8.026337
+4.0    11.315443
+5.0    59.972802
+Name: proportion, dtype: float64
+
+======================================================================
+TEXT STATISTICS
+======================================================================
+Average text length: 173 characters
+Average word count: 33 words
+Median word count: 19 words
+
+======================================================================
+MISSING VALUES
+======================================================================
+rating                 0
+title                160
+text                 212
+images                 0
+asin                   0
+parent_asin            0
+user_id                0
+timestamp              0
+helpful_vote           0
+verified_purchase      0
+text_length            0
+word_count             0
+dtype: int64
+
+✓ Visualizations saved to data_exploration.png
+
+======================================================================
+SAMPLE REVIEWS
+======================================================================
+
+Review 1:
+Rating: 5.0/5
+Title: Such a lovely scent but not overpowering.
+Text: This spray is really nice. It smells really good, goes on really fine, and does the trick. I will say it feels like you need a lot of it though to get the texture I want. I have a lot of hair, medium ...
+
+Review 2:
+Rating: 4.0/5
+Title: Works great but smells a little weird.
+Text: This product does what I need it to do, I just wish it was odorless or had a soft coconut smell. Having my head smell like an orange coffee is offputting. (granted, I did know the smell was described ...
+
+Review 3:
+Rating: 5.0/5
+Title: Yes!
+Text: Smells good, feels great!...

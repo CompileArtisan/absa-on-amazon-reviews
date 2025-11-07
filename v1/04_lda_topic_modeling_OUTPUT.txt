@@ -1,0 +1,53 @@
+Loading preprocessed data...
+Dataset size: 530546 reviews
+
+Sampling 100000 reviews for coherence testing...
+
+Creating dictionary and corpus...
+Dictionary size before filtering: 36027
+Dictionary size after filtering: 5000
+
+======================================================================
+FINDING OPTIMAL NUMBER OF TOPICS
+======================================================================
+
+Training LDA with 5 topics...
+  Coherence score: 0.5397
+
+Training LDA with 6 topics...
+  Coherence score: 0.5853
+
+Training LDA with 7 topics...
+  Coherence score: 0.5704
+
+Training LDA with 8 topics...
+  Coherence score: 0.5128
+
+Training LDA with 9 topics...
+  Coherence score: 0.5090
+
+Training LDA with 10 topics...
+  Coherence score: 0.5590
+
+Training LDA with 11 topics...
+  Coherence score: 0.5855
+
+Training LDA with 12 topics...
+  Coherence score: 0.5527
+
+Training LDA with 13 topics...
+  Coherence score: 0.5471
+
+Training LDA with 14 topics...
+  Coherence score: 0.5083
+
+Training LDA with 15 topics...
+  Coherence score: 0.5892
+
+======================================================================
+OPTIMAL NUMBER OF TOPICS: 15
+COHERENCE SCORE: 0.5892
+======================================================================
+
+✓ Results saved to coherence_results.pkl
+✓ Plot saved to topic_coherence_scores.png
