@@ -8,7 +8,7 @@ print("GENERATING FINAL COMPREHENSIVE REPORT")
 print("="*70)
 
 # Load all necessary data
-df = pd.read_csv('all_beauty_predictions.csv')
+df = pd.read_csv('all_beauty_predictions_balanced.csv')
 aspect_summary = pd.read_csv('aspect_summary.csv', index_col=0)
 
 with open('topic_labels.pkl', 'rb') as f:
@@ -21,7 +21,7 @@ with open('coherence_results.pkl', 'rb') as f:
 from sklearn.metrics import classification_report, accuracy_score
 import joblib
 
-model = joblib.load('naive_bayes_model.pkl')
+model = joblib.load('naive_bayes_model_balanced.pkl')
 
 # Read test data
 df_full = pd.read_csv('all_beauty_with_topics.csv')
@@ -87,7 +87,24 @@ report = {
         'overall_summary': aspect_summary.to_dict('index'),
         'top_3_aspects': aspect_summary.head(3).index.tolist(),
         'bottom_3_aspects': aspect_summary.tail(3).index.tolist()
+    },
+    'data_balancing': {
+    'method': 'SMOTE + Random Undersampling',
+    'original_distribution': {
+        'positive': int(original_positive_count),
+        'negative': int(original_negative_count),
+        'neutral': int(original_neutral_count)
+    },
+    'balanced_distribution': {
+        'positive': 150000,
+        'negative': 100000,
+        'neutral': 80000
+    },
+    'improvement_metrics': {
+        'neutral_f1_improvement': float(neutral_f1_after - neutral_f1_before),
+        'negative_f1_improvement': float(negative_f1_after - negative_f1_before)
     }
+}
 }
 
 # Save JSON report

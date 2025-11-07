@@ -1,7 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-df = pd.read_csv('all_beauty_predictions.csv')
+df = pd.read_csv('all_beauty_predictions_balanced.csv')
 
 # Analyze products with most reviews
 product_analysis = df.groupby('parent_asin').agg({
