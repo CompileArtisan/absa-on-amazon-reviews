@@ -13,3 +13,6 @@ venv
 *.jsonl.gz
 *.json
 *.csv
+output/
+
+summary_using_my_script
