@@ -39,4 +39,4 @@ Original: This product does what I need it to do, I just wish it was odorless or
 Cleaned: this product does what i need it to do i just wish it was odorless or had a soft coconut smell having my head smell like an orange coffee is offputtin...
 Tokens: ['product', 'need', 'wish', 'odorless', 'soft', 'coconut', 'smell', 'head', 'smell', 'like', 'orange', 'coffee', 'offputting', 'granted', 'know', 'smell', 'described', 'hoping', 'would', 'light']
 
-✓ Preprocessed data saved to all_beauty_preprocessed.csv
+Preprocessed data saved to all_beauty_preprocessed.csv

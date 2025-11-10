@@ -6,7 +6,7 @@ from wordcloud import WordCloud
 
 # Load predictions
 print("Loading predictions...")
-df = pd.read_csv('all_beauty_predictions_balanced.csv')
+df = pd.read_csv('all_beauty_predictions.csv')
 
 print(f"Total reviews: {len(df)}")
 

@@ -52,7 +52,7 @@ text_length            0
 word_count             0
 dtype: int64
 
-✓ Visualizations saved to data_exploration.png
+Visualizations saved to data_exploration.png
 
 ======================================================================
 SAMPLE REVIEWS

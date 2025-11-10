@@ -77,11 +77,11 @@ def load_amazon_reviews(file_path, max_rows=None):
 print("Loading All_Beauty reviews...")
 df = load_amazon_reviews('All_Beauty.jsonl.gz')
 
-# Save as CSV for easier access later
+# Save as CSV 
 df.to_csv('all_beauty_reviews.csv', index=False)
 
-print(f"\n✓ Loaded {len(df)} reviews")
-print(f"✓ Saved to all_beauty_reviews.csv")
+print(f"\nLoaded {len(df)} reviews")
+print(f"Saved to all_beauty_reviews.csv")
 print(f"\nDataset shape: {df.shape}")
 print(f"\nColumns: {df.columns.tolist()}")
 #+end_src
@@ -169,7 +169,7 @@ axes[1, 1].set_title('Verified vs Unverified Purchases', fontsize=14, fontweight
 
 plt.tight_layout()
 plt.savefig('data_exploration.png', dpi=300, bbox_inches='tight')
-print("\n✓ Visualizations saved to data_exploration.png")
+print("\nVisualizations saved to data_exploration.png")
 
 # Sample reviews
 print("\n" + "="*70)
@@ -304,7 +304,7 @@ for i in range(2):
     print(f"Cleaned: {df.iloc[i]['cleaned_text'][:150]}...")
     print(f"Tokens: {df.iloc[i]['tokens'][:20]}")
 
-print("\n✓ Preprocessed data saved to all_beauty_preprocessed.csv")
+print("\nPreprocessed data saved to all_beauty_preprocessed.csv")
 #+end_src
 
 * *PHASE 4: LDA Topic Modeling*
@@ -326,9 +326,7 @@ df['tokens'] = df['tokens'].apply(eval)  # Convert string back to list
 
 print(f"Dataset size: {len(df)} reviews")
 
-# Sample if dataset is too large (optional, for faster training)
-# For 700K reviews, you might want to sample for coherence testing
-SAMPLE_SIZE = 100000  # Use 100K for coherence testing
+SAMPLE_SIZE = 100000  
 if len(df) > SAMPLE_SIZE:
     print(f"\nSampling {SAMPLE_SIZE} reviews for coherence testing...")
     df_sample = df.sample(n=SAMPLE_SIZE, random_state=42)
@@ -343,9 +341,9 @@ print(f"Dictionary size before filtering: {len(dictionary)}")
 
 # Filter extremes
 dictionary.filter_extremes(
-    no_below=10,      # Word must appear in at least 10 documents
-    no_above=0.5,     # Word must appear in no more than 50% of documents
-    keep_n=5000       # Keep only top 5000 most frequent words
+    no_below=10,     
+    no_above=0.5,   
+    keep_n=5000    
 )
 
 print(f"Dictionary size after filtering: {len(dictionary)}")
@@ -502,18 +500,22 @@ for idx, topic in lda_model.print_topics(num_topics, num_words=15):
     print(f"\nTopic {idx}:")
     print(f"  {topic}")
 
-# Manually label topics based on keywords (you'll need to do this)
-# These are EXAMPLE labels - you must create your own based on the actual topics
 topic_labels = {
-    0: "Hair Care & Styling",
-    1: "Skin Care & Moisturizers",
-    2: "Makeup & Cosmetics",
-    3: "Nail Care & Polish",
-    4: "Scent & Fragrance",
-    5: "Product Quality & Packaging",
-    6: "Price & Value",
-    7: "Shipping & Delivery",
-    # Add more based on your num_topics
+    0: "General Feedback & Product Experience", 
+    1: "Wigs & Hairpieces",                     
+    2: "Usage & Duration",                      
+    3: "Skin Care & Sensitivity",               
+    4: "Product Reviews & Comparisons",         
+    5: "Positive Product Reviews",              
+    6: "Eye Makeup & Tools",                    
+    7: "Product Value & Disappointment",        
+    8: "Cosmetics & Shades",                    
+    9: "Fragrance & Scent",                     
+    10: "Face Masks & Serums",                  
+    11: "Oral Care & Toothbrushes",             
+    12: "Nail Care & Polish",                   
+    13: "Hair Care & Styling",                  
+    14: "Product Fit & Size",                   
 }
 
 # Save topic labels
@@ -1045,21 +1047,6 @@ aspect_sentiment.plot(kind='bar', stacked=False, ax=axes[1],
 axes[1].set_title('Sentiment Distribution by Aspect (%)', fontsize=14, fontweight='bold')
 axes[1].set_xlabel('Product Aspect', fontsize=12)
 axes[1].set_ylabel('Percentage', fontsize=12)
-axes[1].legend(title='Sentiment', labels
-
-
-
-## Prompt:
-11/4/2025, 9:18:11 PM
-
-Continue
-
-
-
-## Response:
-11/4/2025, 9:19:58 PM
-
-```python
 axes[1].legend(title='Sentiment', labels=['Negative', 'Neutral', 'Positive'])
 axes[1].tick_params(axis='x', rotation=45)
 axes[1].grid(axis='y', alpha=0.3)
@@ -1259,322 +1246,39 @@ print("ASPECT-BASED SENTIMENT ANALYSIS COMPLETE!")
 print("="*70)
 #+end_src
 
-
-
-* *PHASE 7: Final Report Generation*
-
-#+begin_src python :results output raw :wrap src :exports both :tangle 09_generate_final_report.py
-import pandas as pd
-import json
-import pickle
-from datetime import datetime
-
-print("="*70)
-print("GENERATING FINAL COMPREHENSIVE REPORT")
-print("="*70)
-
-# Load all necessary data
-df = pd.read_csv('all_beauty_predictions.csv')
-aspect_summary = pd.read_csv('aspect_summary.csv', index_col=0)
-
-with open('topic_labels.pkl', 'rb') as f:
-    topic_labels = pickle.load(f)
-
-with open('coherence_results.pkl', 'rb') as f:
-    coherence_results = pickle.load(f)
-
-# Load classification metrics from previous run
-from sklearn.metrics import classification_report, accuracy_score
-import joblib
-
-model = joblib.load('naive_bayes_model.pkl')
-
-# Read test data
-df_full = pd.read_csv('all_beauty_with_topics.csv')
-X_test_indices = df.index
-
-y_test = df_full.loc[X_test_indices, 'sentiment']
-y_pred = df['predicted_sentiment']
-
-accuracy = accuracy_score(y_test, y_pred)
-class_report = classification_report(y_test, y_pred, output_dict=True)
-
-# Create comprehensive JSON report
-report = {
-    'metadata': {
-        'report_generated': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-        'dataset': 'Amazon Reviews 2023 - All Beauty',
-        'analysis_type': 'Aspect-Based Sentiment Analysis (LDA + Naive Bayes)'
-    },
-    'dataset_statistics': {
-        'total_reviews': int(len(df_full)),
-        'processed_reviews': int(len(df)),
-        'date_range': {
-            'start': pd.to_datetime(df_full['timestamp'], unit='ms').min().strftime('%Y-%m-%d'),
-            'end': pd.to_datetime(df_full['timestamp'], unit='ms').max().strftime('%Y-%m-%d')
-        },
-        'unique_users': int(df_full['user_id'].nunique()),
-        'unique_products': int(df_full['parent_asin'].nunique()),
-        'rating_distribution': df_full['rating'].value_counts().sort_index().to_dict(),
-        'sentiment_distribution': df['predicted_sentiment'].value_counts().to_dict()
-    },
-    'topic_modeling': {
-        'method': 'Latent Dirichlet Allocation (LDA)',
-        'num_topics': int(coherence_results['optimal_topics']),
-        'coherence_score': float(coherence_results['coherence_scores'][
-            coherence_results['num_topics'].index(coherence_results['optimal_topics'])
-        ]),
-        'topics': {str(k): v for k, v in topic_labels.items()}
-    },
-    'classification': {
-        'model': 'Complement Naive Bayes',
-        'features': 'TF-IDF (5000 features) + Topic Probabilities',
-        'accuracy': float(accuracy),
-        'precision': {
-            'negative': float(class_report['negative']['precision']),
-            'neutral': float(class_report['neutral']['precision']),
-            'positive': float(class_report['positive']['precision']),
-            'weighted_avg': float(class_report['weighted avg']['precision'])
-        },
-        'recall': {
-            'negative': float(class_report['negative']['recall']),
-            'neutral': float(class_report['neutral']['recall']),
-            'positive': float(class_report['positive']['recall']),
-            'weighted_avg': float(class_report['weighted avg']['recall'])
-        },
-        'f1_score': {
-            'negative': float(class_report['negative']['f1-score']),
-            'neutral': float(class_report['neutral']['f1-score']),
-            'positive': float(class_report['positive']['f1-score']),
-            'weighted_avg': float(class_report['weighted avg']['f1-score'])
-        }
-    },
-    'aspect_based_insights': {
-        'overall_summary': aspect_summary.to_dict('index'),
-        'top_3_aspects': aspect_summary.head(3).index.tolist(),
-        'bottom_3_aspects': aspect_summary.tail(3).index.tolist()
-    }
-}
-
-# Save JSON report
-with open('absa_final_report.json', 'w') as f:
-    json.dump(report, f, indent=2)
-
-print("\n✓ JSON report saved: absa_final_report.json")
-
-# Create Excel report with multiple sheets
-print("\nCreating Excel report...")
-with pd.ExcelWriter('absa_final_report.xlsx', engine='openpyxl') as writer:
-    
-    # Sheet 1: Executive Summary
-    exec_summary = pd.DataFrame([
-        ['Dataset', 'Amazon Reviews 2023 - All Beauty'],
-        ['Total Reviews', len(df_full)],
-        ['Processed Reviews', len(df)],
-        ['Date Range', f"{report['dataset_statistics']['date_range']['start']} to {report['dataset_statistics']['date_range']['end']}"],
-        ['', ''],
-        ['Topic Modeling Method', 'LDA'],
-        ['Number of Topics', coherence_results['optimal_topics']],
-        ['Coherence Score', f"{report['topic_modeling']['coherence_score']:.4f}"],
-        ['', ''],
-        ['Classification Model', 'Complement Naive Bayes'],
-        ['Overall Accuracy', f"{accuracy:.4f}"],
-        ['Weighted F1-Score', f"{class_report['weighted avg']['f1-score']:.4f}"],
-    ], columns=['Metric', 'Value'])
-    exec_summary.to_excel(writer, sheet_name='Executive Summary', index=False)
-    
-    # Sheet 2: Topics
-    topics_df = pd.DataFrame([
-        {'Topic_ID': k, 'Topic_Label': v} 
-        for k, v in topic_labels.items()
-    ])
-    topics_df.to_excel(writer, sheet_name='Topics', index=False)
-    
-    # Sheet 3: Aspect Summary
-    aspect_summary.to_excel(writer, sheet_name='Aspect Summary')
-    
-    # Sheet 4: Classification Metrics
-    metrics_df = pd.DataFrame(class_report).T
-    metrics_df.to_excel(writer, sheet_name='Classification Metrics')
-    
-    # Sheet 5: Sentiment by Aspect
-    sentiment_by_aspect = pd.crosstab(
-        df['topic_label'],
-        df['predicted_sentiment']
-    )
-    sentiment_by_aspect.to_excel(writer, sheet_name='Sentiment by Aspect')
-    
-    # Sheet 6: Sample Predictions
-    sample_predictions = df[[
-        'text', 'rating', 'topic_label', 'sentiment', 
-        'predicted_sentiment', 'dominant_prob'
-    ]].head(200)
-    sample_predictions.to_excel(writer, sheet_name='Sample Predictions', index=False)
-    
-    # Sheet 7: Misclassifications
-    misclassified = df[df['sentiment'] != df['predicted_sentiment']][[
-        'text', 'rating', 'sentiment', 'predicted_sentiment', 'topic_label'
-    ]].head(100)
-    misclassified.to_excel(writer, sheet_name='Misclassifications', index=False)
-
-print("✓ Excel report saved: absa_final_report.xlsx")
-
-# Create a text summary report
-print("\nCreating text summary...")
-with open('absa_summary.txt', 'w', encoding='utf-8') as f:
-    f.write("="*70 + "\n")
-    f.write("ASPECT-BASED SENTIMENT ANALYSIS - FINAL REPORT\n")
-    f.write("Amazon Reviews 2023 - All Beauty Category\n")
-    f.write("="*70 + "\n\n")
-    
-    f.write("1. DATASET OVERVIEW\n")
-    f.write("-" * 70 + "\n")
-    f.write(f"Total Reviews: {len(df_full):,}\n")
-    f.write(f"Date Range: {report['dataset_statistics']['date_range']['start']} to {report['dataset_statistics']['date_range']['end']}\n")
-    f.write(f"Unique Users: {report['dataset_statistics']['unique_users']:,}\n")
-    f.write(f"Unique Products: {report['dataset_statistics']['unique_products']:,}\n\n")
-    
-    f.write("2. TOPIC MODELING RESULTS\n")
-    f.write("-" * 70 + "\n")
-    f.write(f"Method: Latent Dirichlet Allocation (LDA)\n")
-    f.write(f"Number of Topics: {coherence_results['optimal_topics']}\n")
-    f.write(f"Coherence Score: {report['topic_modeling']['coherence_score']:.4f}\n\n")
-    f.write("Discovered Topics:\n")
-    for topic_id, label in topic_labels.items():
-        f.write(f"  {topic_id}. {label}\n")
-    f.write("\n")
-    
-    f.write("3. CLASSIFICATION PERFORMANCE\n")
-    f.write("-" * 70 + "\n")
-    f.write(f"Model: Complement Naive Bayes\n")
-    f.write(f"Overall Accuracy: {accuracy:.4f}\n")
-    f.write(f"Weighted F1-Score: {class_report['weighted avg']['f1-score']:.4f}\n\n")
-    f.write("Per-Class Performance:\n")
-    for sentiment in ['negative', 'neutral', 'positive']:
-        f.write(f"\n  {sentiment.capitalize()}:\n")
-        f.write(f"    Precision: {class_report[sentiment]['precision']:.4f}\n")
-        f.write(f"    Recall:    {class_report[sentiment]['recall']:.4f}\n")
-        f.write(f"    F1-Score:  {class_report[sentiment]['f1-score']:.4f}\n")
-    f.write("\n")
-    
-    f.write("4. ASPECT-BASED INSIGHTS\n")
-    f.write("-" * 70 + "\n")
-    f.write("\nTop 3 Aspects (Highest Positive Sentiment):\n")
-    for i, aspect in enumerate(aspect_summary.head(3).index, 1):
-        pos_pct = aspect_summary.loc[aspect, 'Positive_%']
-        neg_pct = aspect_summary.loc[aspect, 'Negative_%']
-        net = aspect_summary.loc[aspect, 'Net_Sentiment']
-        f.write(f"  {i}. {aspect}\n")
-        f.write(f"     Positive: {pos_pct:.1f}% | Negative: {neg_pct:.1f}% | Net: +{net:.1f}%\n")
-    
-    f.write("\nBottom 3 Aspects (Areas for Improvement):\n")
-    for i, aspect in enumerate(aspect_summary.tail(3).index, 1):
-        pos_pct = aspect_summary.loc[aspect, 'Positive_%']
-        neg_pct = aspect_summary.loc[aspect, 'Negative_%']
-        net = aspect_summary.loc[aspect, 'Net_Sentiment']
-        f.write(f"  {i}. {aspect}\n")
-        f.write(f"     Positive: {pos_pct:.1f}% | Negative: {neg_pct:.1f}% | Net: {net:.1f}%\n")
-    
-    f.write("\n" + "="*70 + "\n")
-    f.write("Report generated: " + datetime.now().strftime('%Y-%m-%d %H:%M:%S') + "\n")
-    f.write("="*70 + "\n")
-
-print("✓ Text summary saved: absa_summary.txt")
-
-print("\n" + "="*70)
-print("ALL REPORTS GENERATED SUCCESSFULLY!")
-print("="*70)
-print("\nGenerated files:")
-print("  📄 absa_final_report.json")
-print("  📊 absa_final_report.xlsx")
-print("  📝 absa_summary.txt")
-print("\n" + "="*70)
+#+RESULTS:
+#+begin_src
 #+end_src
 
 
-* *PHASE 8: Optional Advanced Analyses*
 
-** *A. Product-Level Analysis*
 
-#+begin_src python :results output raw :wrap src :exports both :tangle 10_product_level_analysis.py
-import pandas as pd
-import matplotlib.pyplot as plt
-
-df = pd.read_csv('all_beauty_predictions.csv')
-
-# Analyze products with most reviews
-product_analysis = df.groupby('parent_asin').agg({
-    'rating': ['count', 'mean'],
-    'predicted_sentiment': lambda x: (x == 'positive').sum() / len(x) * 100
-}).round(2)
-
-product_analysis.columns = ['Review_Count', 'Avg_Rating', 'Positive_%']
-product_analysis = product_analysis[product_analysis['Review_Count'] >= 50]  # At least 50 reviews
-product_analysis = product_analysis.sort_values('Review_Count', ascending=False)
-
-print("Top 20 Most Reviewed Products:")
-print(product_analysis.head(20))
-
-product_analysis.head(20).to_csv('top_products_analysis.csv')
-print("\nSaved: top_products_analysis.csv")
-#+end_src
-
-** *B. User Behavior Analysis*
-
-#+begin_src python :results output raw :wrap src :exports both :tangle 11_user_behavior_analysis.py
-import pandas as pd
-
-df = pd.read_csv('all_beauty_predictions.csv')
-
-# Analyze users with most reviews
-user_analysis = df.groupby('user_id').agg({
-    'rating': ['count', 'mean'],
-    'predicted_sentiment': lambda x: x.mode()[0] if len(x) > 0 else None
-})
-
-user_analysis.columns = ['Review_Count', 'Avg_Rating', 'Dominant_Sentiment']
-user_analysis = user_analysis[user_analysis['Review_Count'] >= 10]  # Power users
-
-print("Power Users Analysis:")
-print(user_analysis.describe())
-
-# Sentiment distribution of power users
-print("\nPower Users Sentiment Distribution:")
-print(user_analysis['Dominant_Sentiment'].value_counts())
-#+end_src
 
 * Output Files
   
 ** ~01_load_data.py~
-- all_beauty_reviews.csv
+- file:./all_beauty_reviews.csv
 ** ~02_explore_data.py~
-- data_exploration.png
+- file:./data_exploration.png
 ** ~03_preprocess_data.py~
-- all_beauty_preprocessed.csv
+- file:./all_beauty_preprocessed.csv
 ** ~04_lda_topic_modeling.py~
-- coherence_results.pkl
-- topic_coherence_scores.png
+- file:./coherence_results.pkl
+- file:./topic_coherence_scores.png
 ** ~05_train_final_lda.py~
-- lda_visualization.html
-- beauty_lda_final.model
-- topic_labels.pkl
+- file:./lda_visualization.html
+- file:./beauty_lda_final.model
+- file:./topic_labels.pkl
 ** ~06_assign_topics.py~
-- all_beauty_with_topics.csv
+- file:./all_beauty_with_topics.csv
 ** ~07_naive_bayes_classification.py~
-- naive_bayes_model_balanced.pkl 
-- all_beauty_predictions_balanced.csv 
-- confusion_matrix_comparison.png 
-- f1_score_comparison.png 
-- smote_improvement_report.txt 
+- file:./naive_bayes_model_balanced.pkl 
+- file:./all_beauty_predictions_balanced.csv 
+- file:./confusion_matrix_comparison.png 
+- file:./f1_score_comparison.png 
+- file:./smote_improvement_report.txt 
 ** ~08_aspect_sentiment_analysis.py~
-- aspect_sentiment_distribution.png
-- absa_heatmap.png
-- sentiment_trend_overall.png
-** ~09_generate_final_report.py~
-- absa_final_report.json
-- absa_final_report.xlsx
-- absa_summary.txt
-** ~10_product_level_analysis.py~
-- top_products_analysis.csv
-** ~11_user_behavior_analysis.py~
+- file:./aspect_sentiment_distribution.png
+- file:./absa_heatmap.png
+- file:./sentiment_trend_overall.png
 ** ~download_nltk_data.py~

@@ -51,18 +51,22 @@ for idx, topic in lda_model.print_topics(num_topics, num_words=15):
     print(f"\nTopic {idx}:")
     print(f"  {topic}")
 
-# Manually label topics based on keywords (you'll need to do this)
-# These are EXAMPLE labels - you must create your own based on the actual topics
 topic_labels = {
-    0: "Hair Care & Styling",
-    1: "Skin Care & Moisturizers",
-    2: "Makeup & Cosmetics",
-    3: "Nail Care & Polish",
-    4: "Scent & Fragrance",
-    5: "Product Quality & Packaging",
-    6: "Price & Value",
-    7: "Shipping & Delivery",
-    # Add more based on your num_topics
+    0: "General Feedback & Product Experience", 
+    1: "Wigs & Hairpieces",                     
+    2: "Usage & Duration",                      
+    3: "Skin Care & Sensitivity",               
+    4: "Product Reviews & Comparisons",         
+    5: "Positive Product Reviews",              
+    6: "Eye Makeup & Tools",                    
+    7: "Product Value & Disappointment",        
+    8: "Cosmetics & Shades",                    
+    9: "Fragrance & Scent",                     
+    10: "Face Masks & Serums",                  
+    11: "Oral Care & Toothbrushes",             
+    12: "Nail Care & Polish",                   
+    13: "Hair Care & Styling",                  
+    14: "Product Fit & Size",                   
 }
 
 # Save topic labels

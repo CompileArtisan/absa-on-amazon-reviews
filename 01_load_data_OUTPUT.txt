@@ -7,8 +7,8 @@ Loaded 500000 reviews...
 Loaded 600000 reviews...
 Loaded 700000 reviews...
 
-✓ Loaded 701528 reviews
-✓ Saved to all_beauty_reviews.csv
+Loaded 701528 reviews
+Saved to all_beauty_reviews.csv
 
 Dataset shape: (701528, 10)
 

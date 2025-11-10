@@ -12,9 +12,7 @@ df['tokens'] = df['tokens'].apply(eval)  # Convert string back to list
 
 print(f"Dataset size: {len(df)} reviews")
 
-# Sample if dataset is too large (optional, for faster training)
-# For 700K reviews, you might want to sample for coherence testing
-SAMPLE_SIZE = 100000  # Use 100K for coherence testing
+SAMPLE_SIZE = 100000  
 if len(df) > SAMPLE_SIZE:
     print(f"\nSampling {SAMPLE_SIZE} reviews for coherence testing...")
     df_sample = df.sample(n=SAMPLE_SIZE, random_state=42)
@@ -29,9 +27,9 @@ print(f"Dictionary size before filtering: {len(dictionary)}")
 
 # Filter extremes
 dictionary.filter_extremes(
-    no_below=10,      # Word must appear in at least 10 documents
-    no_above=0.5,     # Word must appear in no more than 50% of documents
-    keep_n=5000       # Keep only top 5000 most frequent words
+    no_below=10,     
+    no_above=0.5,   
+    keep_n=5000    
 )
 
 print(f"Dictionary size after filtering: {len(dictionary)}")

@@ -8,8 +8,8 @@ Loaded 500000 reviews...
 Loaded 600000 reviews...
 Loaded 700000 reviews...
 
-✓ Loaded 701528 reviews
-✓ Saved to all_beauty_reviews.csv
+Loaded 701528 reviews
+Saved to all_beauty_reviews.csv
 
 Dataset shape: (701528, 10)
 
@@ -71,7 +71,7 @@ text_length            0
 word_count             0
 dtype: int64
 
-✓ Visualizations saved to data_exploration.png
+Visualizations saved to data_exploration.png
 
 ======================================================================
 SAMPLE REVIEWS
@@ -135,7 +135,7 @@ Original: This product does what I need it to do, I just wish it was odorless or
 Cleaned: this product does what i need it to do i just wish it was odorless or had a soft coconut smell having my head smell like an orange coffee is offputtin...
 Tokens: ['product', 'need', 'wish', 'odorless', 'soft', 'coconut', 'smell', 'head', 'smell', 'like', 'orange', 'coffee', 'offputting', 'granted', 'know', 'smell', 'described', 'hoping', 'would', 'light']
 
-✓ Preprocessed data saved to all_beauty_preprocessed.csv
+Preprocessed data saved to all_beauty_preprocessed.csv
 
 
 ===== 04_lda_topic_modeling_OUTPUT.txt =====
@@ -192,6 +192,112 @@ COHERENCE SCORE: 0.5892
 
 ✓ Results saved to coherence_results.pkl
 ✓ Plot saved to topic_coherence_scores.png
+
+
+===== 05_train_final_lda_OUTPUT.txt =====
+Loading data...
+
+Creating corpus for full dataset...
+
+Training final LDA model with 15 topics...
+
+======================================================================
+DISCOVERED TOPICS
+======================================================================
+
+Topic 0:
+  0.111*"not" + 0.064*"like" + 0.038*"would" + 0.037*"get" + 0.023*"make" + 0.022*"even" + 0.022*"also" + 0.022*"much" + 0.021*"little" + 0.018*"feel" + 0.015*"better" + 0.014*"still" + 0.014*"way" + 0.013*"lot" + 0.012*"need"
+
+Topic 1:
+  0.127*"look" + 0.065*"wig" + 0.042*"natural" + 0.036*"wear" + 0.034*"picture" + 0.022*"real" + 0.021*"looked" + 0.020*"black" + 0.017*"length" + 0.017*"style" + 0.016*"compliment" + 0.016*"full" + 0.015*"wearing" + 0.013*"inch" + 0.013*"dark"
+
+Topic 2:
+  0.080*"use" + 0.064*"time" + 0.045*"day" + 0.040*"using" + 0.034*"first" + 0.031*"long" + 0.025*"put" + 0.024*"week" + 0.023*"last" + 0.021*"dry" + 0.019*"back" + 0.019*"take" + 0.018*"month" + 0.016*"every" + 0.016*"without"
+
+Topic 3:
+  0.193*"skin" + 0.053*"oil" + 0.041*"smooth" + 0.029*"lotion" + 0.025*"feel" + 0.024*"sensitive" + 0.024*"feeling" + 0.024*"leaf" + 0.021*"body" + 0.017*"ingredient" + 0.017*"oily" + 0.016*"dry" + 0.015*"muy" + 0.015*"sticky" + 0.014*"greasy"
+
+Topic 4:
+  0.114*"product" + 0.059*"one" + 0.036*"used" + 0.025*"got" + 0.022*"bought" + 0.017*"best" + 0.016*"year" + 0.016*"amazing" + 0.016*"tried" + 0.015*"received" + 0.014*"two" + 0.013*"give" + 0.013*"review" + 0.013*"never" + 0.013*"different"
+
+Topic 5:
+  0.080*"love" + 0.072*"great" + 0.053*"good" + 0.048*"work" + 0.044*"really" + 0.038*"well" + 0.033*"easy" + 0.028*"quality" + 0.027*"buy" + 0.026*"recommend" + 0.026*"soft" + 0.026*"price" + 0.023*"definitely" + 0.023*"nice" + 0.020*"perfect"
+
+Topic 6:
+  0.151*"lash" + 0.038*"eyelash" + 0.038*"shave" + 0.036*"razor" + 0.031*"eye" + 0.031*"lip" + 0.029*"eyeliner" + 0.029*"shaver" + 0.027*"blade" + 0.027*"powder" + 0.024*"mascara" + 0.021*"eyebrow" + 0.021*"liner" + 0.020*"shaving" + 0.017*"pair"
+
+Topic 7:
+  0.067*"money" + 0.048*"worth" + 0.043*"disappointed" + 0.041*"item" + 0.030*"box" + 0.030*"waste" + 0.027*"package" + 0.027*"arrived" + 0.026*"cheap" + 0.024*"return" + 0.021*"broke" + 0.020*"glue" + 0.019*"broken" + 0.018*"half" + 0.017*"horrible"
+
+Topic 8:
+  0.225*"color" + 0.098*"bottle" + 0.078*"light" + 0.035*"spray" + 0.025*"white" + 0.024*"red" + 0.024*"pink" + 0.021*"brown" + 0.020*"weight" + 0.017*"match" + 0.017*"blend" + 0.017*"foundation" + 0.016*"blue" + 0.015*"pump" + 0.013*"shade"
+
+Topic 9:
+  0.192*"smell" + 0.078*"scent" + 0.039*"soap" + 0.037*"strong" + 0.034*"beard" + 0.022*"fragrance" + 0.018*"fresh" + 0.018*"deodorant" + 0.017*"perfume" + 0.014*"bar" + 0.014*"christmas" + 0.014*"chemical" + 0.013*"birthday" + 0.013*"body" + 0.013*"smelled"
+
+Topic 10:
+  0.086*"face" + 0.043*"eye" + 0.039*"cream" + 0.038*"mask" + 0.027*"night" + 0.027*"difference" + 0.021*"line" + 0.020*"noticed" + 0.018*"area" + 0.017*"morning" + 0.015*"roller" + 0.015*"help" + 0.014*"serum" + 0.012*"spot" + 0.012*"burn"
+
+Topic 11:
+  0.188*"brush" + 0.068*"clean" + 0.030*"teeth" + 0.025*"battery" + 0.024*"bristle" + 0.023*"handle" + 0.019*"toothbrush" + 0.018*"charge" + 0.017*"cleaning" + 0.015*"power" + 0.014*"unit" + 0.012*"brushing" + 0.011*"setting" + 0.011*"drill" + 0.010*"cleaner"
+
+Topic 12:
+  0.223*"nail" + 0.087*"polish" + 0.085*"gel" + 0.041*"coat" + 0.030*"delivery" + 0.025*"base" + 0.022*"professional" + 0.020*"top" + 0.018*"delivered" + 0.017*"file" + 0.017*"beginner" + 0.016*"lamp" + 0.015*"glitter" + 0.015*"plate" + 0.014*"sticker"
+
+Topic 13:
+  0.433*"hair" + 0.037*"thick" + 0.032*"curl" + 0.025*"shampoo" + 0.021*"clip" + 0.020*"comb" + 0.018*"shed" + 0.017*"conditioner" + 0.016*"heat" + 0.015*"shedding" + 0.013*"straight" + 0.013*"tangle" + 0.013*"curly" + 0.012*"iron" + 0.011*"thin"
+
+Topic 14:
+  0.025*"head" + 0.025*"small" + 0.024*"keep" + 0.023*"size" + 0.023*"fit" + 0.020*"enough" + 0.020*"hold" + 0.016*"easily" + 0.015*"big" + 0.015*"cut" + 0.014*"bag" + 0.014*"plastic" + 0.013*"videoid" + 0.013*"part" + 0.012*"around"
+
+Creating interactive visualization...
+
+✓ Model saved to beauty_lda_final.model
+✓ Topic labels saved to topic_labels.pkl
+✓ Visualization saved to lda_visualization.html
+
+>>> Open lda_visualization.html in your browser to explore topics!
+
+
+===== 06_assign_topics_OUTPUT.txt =====
+Loading data and models...
+
+Assigning topics to reviews...
+  Processed 50000 reviews...
+  Processed 100000 reviews...
+  Processed 150000 reviews...
+  Processed 200000 reviews...
+  Processed 250000 reviews...
+  Processed 300000 reviews...
+  Processed 350000 reviews...
+  Processed 400000 reviews...
+  Processed 450000 reviews...
+  Processed 500000 reviews...
+
+======================================================================
+TOPIC ASSIGNMENT COMPLETE
+======================================================================
+
+Topic distribution:
+topic_label
+General Feedback & Product Experience    218382
+Positive Product Reviews                 163071
+Product Reviews & Comparisons             85464
+Usage & Duration                          26571
+Product Fit & Size                        18036
+Hair Care & Styling                        4638
+Skin Care & Sensitivity                    3521
+Wigs & Hairpieces                          2467
+Face Masks & Serums                        2284
+Product Value & Disappointment             1542
+Fragrance & Scent                          1399
+Cosmetics & Shades                         1002
+Oral Care & Toothbrushes                    884
+Nail Care & Polish                          683
+Eye Makeup & Tools                          602
+Name: count, dtype: int64
+
+✓ Data with topics saved to all_beauty_with_topics.csv
 
 
 ===== 07_naive_bayes_classification_OUTPUT.txt =====
@@ -374,14 +480,14 @@ ASPECT-BASED SENTIMENT ANALYSIS
 Sentiment Distribution by Aspect (%):
 predicted_sentiment          negative  neutral  positive
 topic_label                                             
-Hair Care & Styling             26.89    37.14     35.98
-Makeup & Cosmetics              29.70    16.60     53.70
-Nail Care & Polish               5.69     4.61     89.70
-Price & Value                   23.85    26.15     50.00
-Product Quality & Packaging      5.23    11.11     83.66
-Scent & Fragrance               27.25    10.84     61.91
-Shipping & Delivery             98.48     0.91      0.61
-Skin Care & Moisturizers        31.05    30.04     38.91
+Hair Care & Styling             45.24     5.78     48.98
+Makeup & Cosmetics              38.55     1.58     59.88
+Nail Care & Polish               5.69     0.00     94.31
+Price & Value                   35.38     3.85     60.77
+Product Quality & Packaging      8.79     0.82     90.39
+Scent & Fragrance               32.60     1.00     66.40
+Shipping & Delivery             99.09     0.00      0.91
+Skin Care & Moisturizers        47.38     2.42     50.20
 
 ✓ Saved: aspect_sentiment_distribution.png
 ✓ Saved: absa_heatmap.png
@@ -393,26 +499,26 @@ ASPECT ANALYSIS - STRENGTHS & WEAKNESSES
 Aspect Summary (sorted by Net Sentiment):
                              Total_Reviews  ...  Net_Sentiment
 topic_label                                 ...               
-Nail Care & Polish                     738  ...          84.01
-Product Quality & Packaging          32543  ...          78.44
-Scent & Fragrance                    17184  ...          34.67
-Price & Value                          130  ...          26.15
-Makeup & Cosmetics                    5326  ...          24.00
-Hair Care & Styling                  43734  ...           9.09
-Skin Care & Moisturizers               496  ...           7.86
-Shipping & Delivery                    328  ...         -97.87
+Nail Care & Polish                     738  ...          88.62
+Product Quality & Packaging          32543  ...          81.59
+Scent & Fragrance                    17184  ...          33.80
+Price & Value                          130  ...          25.38
+Makeup & Cosmetics                    5326  ...          21.33
+Hair Care & Styling                  43734  ...           3.74
+Skin Care & Moisturizers               496  ...           2.82
+Shipping & Delivery                    328  ...         -98.17
 
 [8 rows x 5 columns]
 
 🟢 STRONGEST ASPECTS:
-  • Nail Care & Polish: 89.7% positive, 5.7% negative
-  • Product Quality & Packaging: 83.7% positive, 5.2% negative
-  • Scent & Fragrance: 61.9% positive, 27.2% negative
+  • Nail Care & Polish: 94.3% positive, 5.7% negative
+  • Product Quality & Packaging: 90.4% positive, 8.8% negative
+  • Scent & Fragrance: 66.4% positive, 32.6% negative
 
 🔴 WEAKEST ASPECTS:
-  • Hair Care & Styling: 36.0% positive, 26.9% negative
-  • Skin Care & Moisturizers: 38.9% positive, 31.0% negative
-  • Shipping & Delivery: 0.6% positive, 98.5% negative
+  • Hair Care & Styling: 49.0% positive, 45.2% negative
+  • Skin Care & Moisturizers: 50.2% positive, 47.4% negative
+  • Shipping & Delivery: 0.9% positive, 99.1% negative
 
 ======================================================================
 DETAILED ASPECT ANALYSIS
@@ -425,8 +531,7 @@ ASPECT: Nail Care & Polish
 Total reviews: 738
 
 Sentiment Distribution:
-  Positive  :    662 ( 89.7%)
-  Neutral   :     34 (  4.6%)
+  Positive  :    696 ( 94.3%)
   Negative  :     42 (  5.7%)
 
 Average Rating: 4.57/5.0
@@ -441,19 +546,11 @@ POSITIVE EXAMPLES:
 
 NEGATIVE EXAMPLES:
 
-  [1] Rating: 3/5 | Confidence: 0.21
+  [1] Rating: 4/5 | Confidence: 0.20
+      "Muy bueno el material; pero lamentablemente me llegaron muy pequeños... Para el largo de mi cabellos.  Una pena lo regalaré .lo recomiemdo para pelo corto ,mi pelo es mitad de espalda."
+
+  [2] Rating: 3/5 | Confidence: 0.21
       "The seal was broken under the lid when I received the package causing all of the coconut oil liquid to leak out leaving me with a dry scrub. Beware this is a scrub containing salt and you can certainl..."
-
-  [2] Rating: 5/5 | Confidence: 0.15
-      "Me gustaron los acabados y detalles, pero la senti muy apretada, deberia tener algo para ajustarla al tamaño de la cabeza."
-
-NEUTRAL EXAMPLES:
-
-  [1] Rating: 5/5 | Confidence: 0.19
-      "Nice quality 16 oz bottle of coconut carrier oil.<br />Very clear with no discoloration or impurities visible.<br />Has a little &#34;soap&#34; like smell I have never noticed with coconut oils. But b..."
-
-  [2] Rating: 2/5 | Confidence: 0.23
-      "I have dry, flakey skin area, read the reviews, and thought I would give it a shot. It didn't work for me. The product goes on smooth but didn't clear up the flaky skin. No oily reside left behind"
 
 ======================================================================
 ASPECT: Product Quality & Packaging
@@ -462,19 +559,19 @@ ASPECT: Product Quality & Packaging
 Total reviews: 32,543
 
 Sentiment Distribution:
-  Positive  : 27,227 ( 83.7%)
-  Neutral   :  3,615 ( 11.1%)
-  Negative  :  1,701 (  5.2%)
+  Positive  : 29,414 ( 90.4%)
+  Neutral   :    267 (  0.8%)
+  Negative  :  2,862 (  8.8%)
 
 Average Rating: 4.60/5.0
 
 POSITIVE EXAMPLES:
 
-  [1] Rating: 5/5 | Confidence: 0.22
-      "I Love Revel and was THRILLED to find them on Amazon!!  Amazingly smooth dip, super easy to work with!  The color is gorgeous!  These dips are a MUST!"
+  [1] Rating: 4/5 | Confidence: 0.28
+      "works good, but should be a bigger role for the price"
 
-  [2] Rating: 5/5 | Confidence: 0.23
-      "These lashes are amazing. Very glamorous and reusable. I’ve used them twice now with no problems. They are super pretty and great for a bold look!"
+  [2] Rating: 5/5 | Confidence: 0.22
+      "I Love Revel and was THRILLED to find them on Amazon!!  Amazingly smooth dip, super easy to work with!  The color is gorgeous!  These dips are a MUST!"
 
 NEGATIVE EXAMPLES:
 
@@ -486,11 +583,11 @@ NEGATIVE EXAMPLES:
 
 NEUTRAL EXAMPLES:
 
-  [1] Rating: 4/5 | Confidence: 0.28
-      "works good, but should be a bigger role for the price"
+  [1] Rating: 1/5 | Confidence: 0.22
+      "Really doesn't have the mirror finish, just metallic looking"
 
-  [2] Rating: 5/5 | Confidence: 0.27
-      "Super fun, cute and the band doesn’t hurt!!"
+  [2] Rating: 4/5 | Confidence: 0.18
+      "They’re great, but I have a big head so they didn’t sit right on me."
 
 ======================================================================
 ASPECT: Scent & Fragrance
@@ -499,9 +596,9 @@ ASPECT: Scent & Fragrance
 Total reviews: 17,184
 
 Sentiment Distribution:
-  Positive  : 10,639 ( 61.9%)
-  Neutral   :  1,863 ( 10.8%)
-  Negative  :  4,682 ( 27.2%)
+  Positive  : 11,410 ( 66.4%)
+  Neutral   :    172 (  1.0%)
+  Negative  :  5,602 ( 32.6%)
 
 Average Rating: 3.90/5.0
 
@@ -518,16 +615,16 @@ NEGATIVE EXAMPLES:
   [1] Rating: 3/5 | Confidence: 0.36
       "I bought this to replace a similar, more expensive version. It stopped working after 2 uses. I loved my other one. I used it daily and it was a favorite among guests. It held up great, even after fall..."
 
-  [2] Rating: 1/5 | Confidence: 0.24
-      "3 of these cost retail $32 on the young living site.  They just happen to be out.  Terrible!"
+  [2] Rating: 4/5 | Confidence: 0.17
+      "Wife: This came with two bottles of gel remover and one bottle of latex, a buffer and a pusher tool.  after applying it, my nail felt weird like heavy-ish. But it did work for the most part, I had to ..."
 
 NEUTRAL EXAMPLES:
 
-  [1] Rating: 4/5 | Confidence: 0.17
-      "Wife: This came with two bottles of gel remover and one bottle of latex, a buffer and a pusher tool.  after applying it, my nail felt weird like heavy-ish. But it did work for the most part, I had to ..."
+  [1] Rating: 3/5 | Confidence: 0.22
+      "Pack of 5: 3 have a inside material added, then 2 were just the black material.  Not consistent, the thinner ones are better for comfort."
 
-  [2] Rating: 2/5 | Confidence: 0.16
-      "One of the spray heads is broken before using,disappointed.<br />Very reasonable for 6 bottles and spray nozzles. I make moonwater with it."
+  [2] Rating: 5/5 | Confidence: 0.20
+      "This COULD be a bit longer but there's no reason it shouldn't have 5 stars. It's stretchy, long ENOUGH, soft and the color I ordered (coral pink) is lovely (:.<br />I'll probably buy more but I've alr..."
 
 ======================================================================
 ASPECT: Price & Value
@@ -536,9 +633,9 @@ ASPECT: Price & Value
 Total reviews: 130
 
 Sentiment Distribution:
-  Positive  :     65 ( 50.0%)
-  Neutral   :     34 ( 26.2%)
-  Negative  :     31 ( 23.8%)
+  Positive  :     79 ( 60.8%)
+  Neutral   :      5 (  3.8%)
+  Negative  :     46 ( 35.4%)
 
 Average Rating: 3.85/5.0
 
@@ -552,19 +649,19 @@ POSITIVE EXAMPLES:
 
 NEGATIVE EXAMPLES:
 
-  [1] Rating: 2/5 | Confidence: 0.18
-      "Great setup, love the case & easy lash applicator. However the magnets on the applicator are stronger than the lash magnets so they never connect. I spent at least 2 hours and every method I could thi..."
-
-  [2] Rating: 1/5 | Confidence: 0.17
-      "MAinly cheap lip pencils and a bunch ugly lip gloss"
-
-NEUTRAL EXAMPLES:
-
   [1] Rating: 3/5 | Confidence: 0.19
       "the lashes were nice but the eyeline sticks to the magnets when you take off the lashes, you have to clean the magnets on the lashes after. overall looked alr."
 
-  [2] Rating: 1/5 | Confidence: 0.15
-      "My eye shadow palette arrived on time. But it was damaged. Some of the eye shadows were cracked."
+  [2] Rating: 2/5 | Confidence: 0.18
+      "Great setup, love the case & easy lash applicator. However the magnets on the applicator are stronger than the lash magnets so they never connect. I spent at least 2 hours and every method I could thi..."
+
+NEUTRAL EXAMPLES:
+
+  [1] Rating: 4/5 | Confidence: 0.21
+      "IT IS TRUE.  THIS SHAVER DOES SHAVE YOUR NECK CLOSER THAN THE OLD NORELCO SHAVERS DID."
+
+  [2] Rating: 5/5 | Confidence: 0.19
+      "Great shaver.  As good as my Braun Series 7 Shaver. But 1/6 the cost.  Do you think Braun might be profiteering?"
 
 ======================================================================
 ASPECT: Makeup & Cosmetics
@@ -573,9 +670,9 @@ ASPECT: Makeup & Cosmetics
 Total reviews: 5,326
 
 Sentiment Distribution:
-  Positive  :  2,860 ( 53.7%)
-  Neutral   :    884 ( 16.6%)
-  Negative  :  1,582 ( 29.7%)
+  Positive  :  3,189 ( 59.9%)
+  Neutral   :     84 (  1.6%)
+  Negative  :  2,053 ( 38.5%)
 
 Average Rating: 3.68/5.0
 
@@ -585,7 +682,7 @@ POSITIVE EXAMPLES:
       "I was experiencing extreme itching on my calves after taking a shower for several hours.  I tried every lotion and oil to no avail.  When I purchased this product I also ordered scented oils to add to..."
 
   [2] Rating: 4/5 | Confidence: 0.24
-      "Just received my dead sea mud mask today! So excited , I've just applied it and left it on for 12 minutes, applied warm water to remove the mask and the mask rinsed right off, my face is softer and fe..."
+      "MY Positives: No streaks or unsightly orange-y spots, noticeable color after 1 use, smell (like peach tea) is less-bad than old-school tanners, and I only need to use it every 2-4 days to maintain col..."
 
 NEGATIVE EXAMPLES:
 
@@ -597,11 +694,11 @@ NEGATIVE EXAMPLES:
 
 NEUTRAL EXAMPLES:
 
-  [1] Rating: 5/5 | Confidence: 0.20
-      "Polish stays on for weeks without chipping, great base!"
+  [1] Rating: 1/5 | Confidence: 0.15
+      "Takes 10 + passes to cut one patch of your face. THEN, it still leaves multiple, multiple hairs I then had to go over with a razor.  Cutting quality is a 2 out of 10."
 
-  [2] Rating: 4/5 | Confidence: 0.24
-      "MY Positives: No streaks or unsightly orange-y spots, noticeable color after 1 use, smell (like peach tea) is less-bad than old-school tanners, and I only need to use it every 2-4 days to maintain col..."
+  [2] Rating: 4/5 | Confidence: 0.22
+      "pump on the shampoo doesn't work, I have to take it off every time I use it. very inconvenient."
 
 ======================================================================
 ASPECT: Hair Care & Styling
@@ -610,9 +707,9 @@ ASPECT: Hair Care & Styling
 Total reviews: 43,734
 
 Sentiment Distribution:
-  Positive  : 15,734 ( 36.0%)
-  Neutral   : 16,242 ( 37.1%)
-  Negative  : 11,758 ( 26.9%)
+  Positive  : 21,420 ( 49.0%)
+  Neutral   :  2,530 (  5.8%)
+  Negative  : 19,784 ( 45.2%)
 
 Average Rating: 3.42/5.0
 
@@ -626,19 +723,19 @@ POSITIVE EXAMPLES:
 
 NEGATIVE EXAMPLES:
 
-  [1] Rating: 1/5 | Confidence: 0.24
-      "Not what I was expecting.  Will never use.  May cut off the shield and just use as a hat in someway."
-
-  [2] Rating: 2/5 | Confidence: 0.20
-      "So, I was excited to try this deodorant because it was suppose to be natural . The packaging was fine. Scent was beautiful ! I have the coconut and papaya, but it does not last at all!<br />You put so..."
-
-NEUTRAL EXAMPLES:
-
   [1] Rating: 4/5 | Confidence: 0.25
       "I have to say I was so surprised by the pigmentation this pallete had. Now I won’t lie the more pastel shades did disappoint me, but I had low hopes for those anyway, they’re hard to get right. One ot..."
 
-  [2] Rating: 5/5 | Confidence: 0.23
-      "Good product, could be a little more sticky."
+  [2] Rating: 1/5 | Confidence: 0.24
+      "Not what I was expecting.  Will never use.  May cut off the shield and just use as a hat in someway."
+
+NEUTRAL EXAMPLES:
+
+  [1] Rating: 4/5 | Confidence: 0.22
+      "Its okay im a licensed hairstylist for 20 yrs to me its a little thick i had to razor cut alot of hair off the top to get it to lay flat .also the color of the scalp is too dark an orangy. More yellow..."
+
+  [2] Rating: 2/5 | Confidence: 0.26
+      "This mascara has a lot of product on the brush, which can make application messy and lead to staining on the eyelids. Additionally, the mascara tends to clump on the lashes and make them stick togethe..."
 
 ======================================================================
 ASPECT: Skin Care & Moisturizers
@@ -647,35 +744,35 @@ ASPECT: Skin Care & Moisturizers
 Total reviews: 496
 
 Sentiment Distribution:
-  Positive  :    193 ( 38.9%)
-  Neutral   :    149 ( 30.0%)
-  Negative  :    154 ( 31.0%)
+  Positive  :    249 ( 50.2%)
+  Neutral   :     12 (  2.4%)
+  Negative  :    235 ( 47.4%)
 
 Average Rating: 3.62/5.0
 
 POSITIVE EXAMPLES:
 
-  [1] Rating: 5/5 | Confidence: 0.21
+  [1] Rating: 3/5 | Confidence: 0.18
+      "The wig is gorgeous and is very full, does tangle quickly but once brushed threw it’s fine, another issue is does frizz up  bit until I sprayed some wave mist with frizz control.. other wise it’s a ve..."
+
+  [2] Rating: 5/5 | Confidence: 0.21
       "Just got these extensions and I’m completely in love for it. I’ve bought the Dark ash blonde highlight medium blonde. It matches perfect with my hair color and the thickness makes a real difference in..."
 
-  [2] Rating: 5/5 | Confidence: 0.23
-      "This is probably my fifth or sixth Imstyle wig. The lace is nice and full, and there’s a lot of preblendind done to the wigs so it’s practically trim to fit, tack and tone out the lace for a flawless ..."
-
 NEGATIVE EXAMPLES:
-
-  [1] Rating: 1/5 | Confidence: 0.18
-      "False advertising for this product. It was advertised as no shedding when in fact it has major shedding. There were also strands of plastic hair in it. It doesn't appear to be human hair but synthetic..."
-
-  [2] Rating: 1/5 | Confidence: 0.19
-      "This was horrible, strands of hair would fall out, it looked fake. It was so shiny that it looked greasy. It doesn’t look like the picture at all."
-
-NEUTRAL EXAMPLES:
 
   [1] Rating: 2/5 | Confidence: 0.15
       "I've been wearing this closure with deep wave bundles for about a month and a half now.  The closure is made of low quality hair that tangles.  It looked really good for about two weeks then started t..."
 
-  [2] Rating: 3/5 | Confidence: 0.18
-      "The wig is gorgeous and is very full, does tangle quickly but once brushed threw it’s fine, another issue is does frizz up  bit until I sprayed some wave mist with frizz control.. other wise it’s a ve..."
+  [2] Rating: 1/5 | Confidence: 0.18
+      "False advertising for this product. It was advertised as no shedding when in fact it has major shedding. There were also strands of plastic hair in it. It doesn't appear to be human hair but synthetic..."
+
+NEUTRAL EXAMPLES:
+
+  [1] Rating: 5/5 | Confidence: 0.26
+      "The pros of the hair<br />- full closure and wig<br />- true to length<br />- very black ( no need to add black dye)<br />- soft<br /><br />The cons<br />- sheds a little<br />- takes time to bleach<b..."
+
+  [2] Rating: 5/5 | Confidence: 0.27
+      "Very nice full wig. The lace is soft and maneuverable. It has a nice full lace ear to ear lace. I do suggest bleaching the knots and plucking the hairline a little more"
 
 ======================================================================
 ASPECT: Shipping & Delivery
@@ -684,9 +781,8 @@ ASPECT: Shipping & Delivery
 Total reviews: 328
 
 Sentiment Distribution:
-  Positive  :      2 (  0.6%)
-  Neutral   :      3 (  0.9%)
-  Negative  :    323 ( 98.5%)
+  Positive  :      3 (  0.9%)
+  Negative  :    325 ( 99.1%)
 
 Average Rating: 1.35/5.0
 
@@ -695,8 +791,8 @@ POSITIVE EXAMPLES:
   [1] Rating: 5/5 | Confidence: 0.19
       "As described. Very convenient to have, saves a lot of space. Worth every penny!!!"
 
-  [2] Rating: 5/5 | Confidence: 0.19
-      "I loved this wig and only paid 10.00 dollars, yes☺️ it was worth every penny!"
+  [2] Rating: 1/5 | Confidence: 0.13
+      "Arrived cracked and with debris in the hole.  Item is too small and too thick for proper gua sha technique."
 
 NEGATIVE EXAMPLES:
 
@@ -705,14 +801,6 @@ NEGATIVE EXAMPLES:
 
   [2] Rating: 1/5 | Confidence: 0.21
       "It is awful!  It doesn’t work. I am very disappointed, don’t waste your money."
-
-NEUTRAL EXAMPLES:
-
-  [1] Rating: 3/5 | Confidence: 0.17
-      "They look kind of cheap but they look very nice. It worth the money that I paid and they will last long enough."
-
-  [2] Rating: 3/5 | Confidence: 0.17
-      "I love these hair clips as I have a lot of hair. Unfortunately, the package arrived with two already broken."
 
 ======================================================================
 GENERATING WORD CLOUDS
@@ -738,12 +826,6 @@ Analyzing sentiment trends over time...
 
 ======================================================================
 ASPECT-BASED SENTIMENT ANALYSIS COMPLETE!
-======================================================================
-
-
-===== 09_generate_final_report_OUTPUT.txt =====
-======================================================================
-GENERATING FINAL COMPREHENSIVE REPORT
 ======================================================================
 
 

@@ -114,4 +114,4 @@ for i in range(2):
     print(f"Cleaned: {df.iloc[i]['cleaned_text'][:150]}...")
     print(f"Tokens: {df.iloc[i]['tokens'][:20]}")
 
-print("\n✓ Preprocessed data saved to all_beauty_preprocessed.csv")
+print("\nPreprocessed data saved to all_beauty_preprocessed.csv")

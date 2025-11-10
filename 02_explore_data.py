@@ -78,7 +78,7 @@ axes[1, 1].set_title('Verified vs Unverified Purchases', fontsize=14, fontweight
 
 plt.tight_layout()
 plt.savefig('data_exploration.png', dpi=300, bbox_inches='tight')
-print("\n✓ Visualizations saved to data_exploration.png")
+print("\nVisualizations saved to data_exploration.png")
 
 # Sample reviews
 print("\n" + "="*70)

@@ -30,10 +30,10 @@ def load_amazon_reviews(file_path, max_rows=None):
 print("Loading All_Beauty reviews...")
 df = load_amazon_reviews('All_Beauty.jsonl.gz')
 
-# Save as CSV for easier access later
+# Save as CSV 
 df.to_csv('all_beauty_reviews.csv', index=False)
 
-print(f"\n✓ Loaded {len(df)} reviews")
-print(f"✓ Saved to all_beauty_reviews.csv")
+print(f"\nLoaded {len(df)} reviews")
+print(f"Saved to all_beauty_reviews.csv")
 print(f"\nDataset shape: {df.shape}")
 print(f"\nColumns: {df.columns.tolist()}")
